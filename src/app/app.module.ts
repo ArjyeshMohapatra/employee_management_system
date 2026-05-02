@@ -17,14 +17,10 @@ import { EmpBasicDetailsComponent } from './layout/emp-basic-details/emp-basic-d
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ForgotPasswordComponent } from './auth/forget-password/forgot-password.component';
-import { EmployeesDetailsComponent } from './features/employees-details/employees-details.component';
-import { EditProfileComponent } from './features/edit-profile/edit-profile.component';
-import { AttendanceMgmtComponent } from './features/attendance-mgmt/attendance-mgmt.component';
 import { HeaderComponent } from './shared/ui/header/header.component';
 import { SidebarComponent } from './shared/ui/sidebar/sidebar.component';
-import { LeaveMgmtComponent } from './features/leave-mgmt/leave-mgmt.component';
 import { NotificationComponent } from './shared/notification/notification.component';
-import { HRPortalComponent } from './features/hr-portal/hr-portal.component';
+import { PageLayoutComponent } from './shared/ui/page-layout/page-layout.component';
 
 @NgModule({
   declarations: [
@@ -34,14 +30,10 @@ import { HRPortalComponent } from './features/hr-portal/hr-portal.component';
     EmpBasicDetailsComponent,
     SignUpComponent,
     ForgotPasswordComponent,
-    EmployeesDetailsComponent,
-    EditProfileComponent,
-    AttendanceMgmtComponent,
     HeaderComponent,
     SidebarComponent,
-    LeaveMgmtComponent,
     NotificationComponent,
-    HRPortalComponent,
+    PageLayoutComponent,
   ],
   imports: [
     BrowserModule,

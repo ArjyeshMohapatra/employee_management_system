@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { clear } from 'console';
 import { AttendanceService } from 'src/app/core/services/attendance.service';
 
 @Component({

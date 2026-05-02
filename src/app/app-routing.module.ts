@@ -42,28 +42,38 @@ const routes: Routes = [
     // canActivate: [AuthGuard]
   },
   {
-    path: 'employees-details',
-    component: EmployeesDetailsComponent,
+    path:'employees-details',
+    loadChildren: () =>
+      import('./features/employees-details/employees-details.module')
+        .then(m => m.EmployeesDetailsModule),
     // canActivate: [AuthGuard]
   },
   {
     path: 'edit-profile',
-    component: EditProfileComponent,
+    loadChildren: () =>
+      import('./features/edit-profile/edit-profile.module')
+        .then(m => m.EditProfileModule),
     // canActivate: [AuthGuard]
   },
   {
     path: 'attendance-mgmt',
-    component: AttendanceMgmtComponent,
+    loadChildren: () =>
+      import('./features/attendance-mgmt/attendance-mgmt.module')
+        .then(m => m.AttendanceMgmtModule),
     // canActivate: [AuthGuard]
   },
   {
     path: 'leave-mgmt',
-    component: LeaveMgmtComponent,
+    loadChildren: () =>
+      import('./features/leave-mgmt/leave-mgmt.module')
+        .then(m => m.LeaveMgmtModule),
     // canActivate: [AuthGuard]
   },
   {
     path: 'hr-portal',
-    component: HRPortalComponent,
+    loadChildren: () =>
+      import('./features/hr-portal/hr-portal.module')
+        .then(m => m.HrPortalModule),
     // canActivate: [AuthGuard]
   }
 ];
