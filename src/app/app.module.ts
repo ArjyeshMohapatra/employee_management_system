@@ -6,25 +6,25 @@ import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { LoginComponent } from './pages/login/login.component';
+import { DashboardComponent } from './layout/dashboard/dashboard.component';
+import { LoginComponent } from './auth/login/login.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { SignUpComponent } from './pages/signup/signup.component';
-import { EmpBasicDetailsComponent } from './pages/emp-basic-details/emp-basic-details.component';
+import { SignUpComponent } from './auth/signup/signup.component';
+import { EmpBasicDetailsComponent } from './layout/emp-basic-details/emp-basic-details.component';
 
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
-import { EmployeesDetailsComponent } from './pages/dashboard/employees-details/employees-details.component';
-import { EditProfileComponent } from './pages/dashboard/edit-profile/edit-profile.component';
-import { AttendanceMgmtComponent } from './pages/dashboard/attendance-mgmt/attendance-mgmt.component';
-import { HeaderComponent } from './pages/ui/header/header.component';
-import { SidebarComponent } from './pages/ui/sidebar/sidebar.component';
-import { LeaveMgmtComponent } from './pages/dashboard/leave-mgmt/leave-mgmt.component';
-import { NotificationComponent } from './pages/notification/notification.component';
-import { HRPortalComponent } from './pages/hr-portal/hr-portal.component';
+import { ForgotPasswordComponent } from './auth/forget-password/forgot-password.component';
+import { EmployeesDetailsComponent } from './features/employees-details/employees-details.component';
+import { EditProfileComponent } from './features/edit-profile/edit-profile.component';
+import { AttendanceMgmtComponent } from './features/attendance-mgmt/attendance-mgmt.component';
+import { HeaderComponent } from './shared/ui/header/header.component';
+import { SidebarComponent } from './shared/ui/sidebar/sidebar.component';
+import { LeaveMgmtComponent } from './features/leave-mgmt/leave-mgmt.component';
+import { NotificationComponent } from './shared/notification/notification.component';
+import { HRPortalComponent } from './features/hr-portal/hr-portal.component';
 
 @NgModule({
   declarations: [

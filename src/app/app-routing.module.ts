@@ -1,50 +1,60 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { LoginComponent } from './pages/login/login.component';
-import { SignUpComponent } from './pages/signup/signup.component';
-import { EmpBasicDetailsComponent } from './pages/emp-basic-details/emp-basic-details.component';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { LoginComponent } from './auth/login/login.component';
+import { SignUpComponent } from './auth/signup/signup.component';
+import { EmpBasicDetailsComponent } from './layout/emp-basic-details/emp-basic-details.component';
+import { DashboardComponent } from './layout/dashboard/dashboard.component';
 import { AuthGuard } from './core/guards/auth.guard';
-import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
-import { EmployeesDetailsComponent } from './pages/dashboard/employees-details/employees-details.component';
-import { EditProfileComponent } from './pages/dashboard/edit-profile/edit-profile.component';
-import { AttendanceMgmtComponent } from './pages/dashboard/attendance-mgmt/attendance-mgmt.component';
-import { LeaveMgmtComponent } from './pages/dashboard/leave-mgmt/leave-mgmt.component';
-import { HRPortalComponent } from './pages/hr-portal/hr-portal.component';
+import { ForgotPasswordComponent } from './auth/forget-password/forgot-password.component';
+import { EmployeesDetailsComponent } from './features/employees-details/employees-details.component';
+import { EditProfileComponent } from './features/edit-profile/edit-profile.component';
+import { AttendanceMgmtComponent } from './features/attendance-mgmt/attendance-mgmt.component';
+import { LeaveMgmtComponent } from './features/leave-mgmt/leave-mgmt.component';
+import { HRPortalComponent } from './features/hr-portal/hr-portal.component';
+import { GuestGuard } from './core/guards/guest.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: 'login', component: LoginComponent },
-  { path: 'signup', component: SignUpComponent },
+  {
+    path: 'login',
+    component: LoginComponent,
+    // canActivate: [GuestGuard]
+  },
+  {
+    path: 'signup',
+    component: SignUpComponent,
+    // canActivate: [GuestGuard]
+  },
   {
     path: 'emp-basic-regis',
     component: EmpBasicDetailsComponent,
-    canActivate: [AuthGuard]
+    // canActivate: [AuthGuard]
   },
   {
     path: 'forgot-password',
-    component: ForgotPasswordComponent
+    component: ForgotPasswordComponent,
+    // canActivate: [GuestGuard]
   },
   {
     path: 'dashboard',
     component: DashboardComponent,
-    canActivate: [AuthGuard]
+    // canActivate: [AuthGuard]
   },
   {
     path: 'employees-details',
     component: EmployeesDetailsComponent,
-    canActivate: [AuthGuard]
+    // canActivate: [AuthGuard]
   },
   {
     path: 'edit-profile',
     component: EditProfileComponent,
-    canActivate: [AuthGuard]
+    // canActivate: [AuthGuard]
   },
   {
     path: 'attendance-mgmt',
     component: AttendanceMgmtComponent,
-    canActivate: [AuthGuard]
+    // canActivate: [AuthGuard]
   },
   {
     path: 'leave-mgmt',
