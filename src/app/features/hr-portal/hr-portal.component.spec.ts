@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HrPortalComponent } from './hr-portal.component';
+import { HRPortalComponent } from './hr-portal.component';
 
-describe('HrPortalComponent', () => {
-  let component: HrPortalComponent;
-  let fixture: ComponentFixture<HrPortalComponent>;
+describe('HRPortalComponent', () => {
+  let component: HRPortalComponent;
+  let fixture: ComponentFixture<HRPortalComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ HrPortalComponent ]
+      declarations: [ HRPortalComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(HrPortalComponent);
+    fixture = TestBed.createComponent(HRPortalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

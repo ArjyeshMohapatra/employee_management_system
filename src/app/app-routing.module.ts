@@ -23,22 +23,30 @@ const routes: Routes = [
   },
   {
     path: 'signup',
-    component: SignUpComponent,
+    loadChildren: () =>
+      import('./auth/signup/signup.module')
+      .then(m => m.SignupModule)
     // canActivate: [GuestGuard]
   },
   {
-    path: 'emp-basic-regis',
-    component: EmpBasicDetailsComponent,
-    // canActivate: [AuthGuard]
-  },
-  {
     path: 'forgot-password',
-    component: ForgotPasswordComponent,
+    loadChildren: () =>
+      import('./auth/forget-password/forget-password.module')
+      .then(m => m.ForgetPasswordModule)
     // canActivate: [GuestGuard]
   },
   {
     path: 'dashboard',
-    component: DashboardComponent,
+    loadChildren: () =>
+      import('./layout/dashboard/dashboard.module')
+        .then(m => m.DashboardModule),
+    // canActivate: [AuthGuard]
+  },
+  {
+    path: 'emp-basic-regis',
+    loadChildren: () =>
+      import('./layout/emp-basic-details/emp-basic-details.module')
+        .then(m => m.EmpBasicDetailsModule),
     // canActivate: [AuthGuard]
   },
   {
@@ -73,7 +81,7 @@ const routes: Routes = [
     path: 'hr-portal',
     loadChildren: () =>
       import('./features/hr-portal/hr-portal.module')
-        .then(m => m.HrPortalModule),
+        .then(m => m.HRPortalModule),
     // canActivate: [AuthGuard]
   }
 ];
