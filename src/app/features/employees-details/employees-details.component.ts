@@ -1,4 +1,4 @@
-import { AfterViewInit, ViewChild, Component, OnInit, Renderer2} from '@angular/core';
+import { AfterViewInit, ViewChild, Component, OnInit } from '@angular/core';
 import { EmployeeService } from 'src/app/core/services/employee.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -14,8 +14,8 @@ export class EmployeesDetailsComponent implements OnInit, AfterViewInit {
 
   chart: any;
 
-  columnWidths: { [key: string]: number } = {
-    sl_no:100,
+  defaultColumnWidths: { [key: string]: number } = {
+    slNo:100,
     name: 180,
     designation: 180,
     emp_type: 180,
@@ -25,12 +25,8 @@ export class EmployeesDetailsComponent implements OnInit, AfterViewInit {
     email: 250
   };
 
-  currentColumn: string = '';
-  startX: number = 0;
-  startWidth: number = 0;
-
   displayedColumns: string[] = [
-    'sl_no',
+    'slNo',
     'name',
     'designation',
     'emp_type',
@@ -54,18 +50,12 @@ export class EmployeesDetailsComponent implements OnInit, AfterViewInit {
   ];
   selectedDepartment: string = 'ALL';
   totalRecords: number = 0;
-  private moveListener: any;
-  private upListener: any;
 
   constructor(
-    private employeeService: EmployeeService,
-    private renderer: Renderer2
+    private employeeService: EmployeeService
   ) { }
 
   ngOnInit(): void {
-    const saved = localStorage.getItem('employeeColumnWidths');
-    if (saved) this.columnWidths = JSON.parse(saved);
-
     this.loadEmployees(0, 5);
     this.loadChartData();
   }
@@ -97,7 +87,6 @@ export class EmployeesDetailsComponent implements OnInit, AfterViewInit {
   }
 
   filterByDepartment(dept: string): void {
-    console.log('done department');
     this.selectedDepartment = dept;
 
     if (this.paginator) {
@@ -112,28 +101,6 @@ export class EmployeesDetailsComponent implements OnInit, AfterViewInit {
     const limit = event.pageSize;
 
     this.loadEmployees(offset, limit);
-  }
-
-  startResize(event: MouseEvent, column: string): void {
-    event.preventDefault();
-    this.currentColumn = column;
-    this.startX = event.pageX;
-    this.startWidth = this.columnWidths[column];
-
-    this.moveListener = this.renderer.listen('document', 'mousemove', this.resizeColumn);
-    this.upListener = this.renderer.listen('document', 'mouseup', this.stopResize);
-  }
-
-  resizeColumn = (event: MouseEvent): void => {
-    const diff = event.pageX - this.startX
-    const newWidth = this.startWidth + diff;
-    if (newWidth > 80) this.columnWidths[this.currentColumn] = newWidth;
-  }
-
-  stopResize = (): void => {
-    localStorage.setItem('employeeColumnWidths', JSON.stringify(this.columnWidths));
-    if (this.moveListener) this.moveListener();
-    if (this.upListener) this.upListener();
   }
 
   loadChartData(): void {

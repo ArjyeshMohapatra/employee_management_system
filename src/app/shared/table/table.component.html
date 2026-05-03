@@ -1,10 +1,24 @@
 <div class="table-wrapper">
 
-    <table mat-table [dataSource]="dataSource" class="w-100">
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      class="w-100"
+      [class.resizable-table]="resizableColumns"
+    >
+      <colgroup *ngIf="resizableColumns">
+        <col
+          *ngFor="let column of displayedColumns"
+          [style.width.px]="getColumnWidth(column)"
+        />
+      </colgroup>
+
       <ng-content></ng-content>
   
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <ng-container *ngIf="columnsReady">
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </ng-container>
     </table>
   
     <mat-paginator

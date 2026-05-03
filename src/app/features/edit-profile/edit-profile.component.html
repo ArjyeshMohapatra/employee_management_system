@@ -1,20 +1,71 @@
 <app-page-layout [title]="'Edit Profile'">
   <div class="page-shell employee-page">
- 
-    <div class="form-header">
-      <p class="form-eyebrow">Employee Profile</p>
-      <h2>Edit Profile</h2>
-      <p class="feedback" *ngIf="message">{{ message }}</p>
-    </div>
 
     <div class="container employee-container">
 
-      <form class="employee-form" [formGroup]="editForm" (ngSubmit)="onUpdate()">
+      <form
+        class="employee-form"
+        [class.is-readonly]="!isEditing"
+        [formGroup]="editForm"
+        (ngSubmit)="onUpdate()"
+      >
 
-        <!-- SECTION 1 -->
-        <section class="section-card" formGroupName="employee">
+        <div class="profile-actions">
+          <div class="section-tabs" aria-label="Profile sections">
+            <button
+              type="button"
+              class="section-tab"
+              [class.active]="activeSection === 'employee'"
+              (click)="selectSection('employee')"
+            >
+              Section 01
+            </button>
+
+            <button
+              type="button"
+              class="section-tab"
+              [class.active]="activeSection === 'employeeDetails'"
+              (click)="selectSection('employeeDetails')"
+            >
+              Section 02
+            </button>
+
+            <button
+              type="button"
+              class="section-tab"
+              [class.active]="activeSection === 'jobDetails'"
+              (click)="selectSection('jobDetails')"
+            >
+              Section 03
+            </button>
+          </div>
+
+          <div class="edit-actions">
+            <button
+              type="button"
+              class="action-btn secondary"
+              (click)="enableEditing()"
+              [disabled]="isEditing"
+            >
+              Edit
+            </button>
+
+            <button
+              type="submit"
+              class="action-btn primary"
+              [disabled]="!canApply"
+            >
+              {{ isApplying ? 'Applying...' : 'Apply' }}
+            </button>
+          </div>
+        </div>
+
+        <section
+          class="section-card"
+          formGroupName="employee"
+          *ngIf="activeSection === 'employee'"
+        >
           <div class="section-heading">
-            <p class="section-index">Section 01</p>
             <h3>Employee Details</h3>
           </div>
 
@@ -53,10 +104,12 @@
           </div>
         </section>
 
-        <!-- SECTION 2 -->
-        <section class="section-card" formGroupName="employeeDetails">
+        <section
+          class="section-card"
+          formGroupName="employeeDetails"
+          *ngIf="activeSection === 'employeeDetails'"
+        >
           <div class="section-heading">
-            <p class="section-index">Section 02</p>
             <h3>Personal Details</h3>
           </div>
 
@@ -119,10 +172,12 @@
           </div>
         </section>
 
-        <!-- SECTION 3 -->
-        <section class="section-card" formGroupName="jobDetails">
+        <section
+          class="section-card"
+          formGroupName="jobDetails"
+          *ngIf="activeSection === 'jobDetails'"
+        >
           <div class="section-heading">
-            <p class="section-index">Section 03</p>
             <h3>Job Details</h3>
           </div>
 
@@ -183,10 +238,6 @@
 
           </div>
         </section>
-
-        <div class="form-actions">
-          <button type="submit">Update Profile</button>
-        </div>
 
       </form>
     </div>

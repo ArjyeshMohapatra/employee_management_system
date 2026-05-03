@@ -4,8 +4,6 @@
     <ng-container *ngIf="!isRedirecting; else redirectingState">
       <h2>Sign Up</h2>
 
-      <p class="feedback" *ngIf="feedbackMessage">{{ feedbackMessage }}</p>
-
       <form [formGroup]="signupForm" (ngSubmit)="onSignUp()">
         <label for="signup-email">Email</label>
         <input id="signup-email" formControlName="email" type="email" placeholder="Enter Email" />

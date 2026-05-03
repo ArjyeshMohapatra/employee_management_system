@@ -54,7 +54,7 @@
 		class="w-100 attendance-table">
 
 		  <ng-container matColumnDef="slNo">
-			<th mat-header-cell *matHeaderCellDef class="text-center"> Sl. No </th>
+			<th mat-header-cell *matHeaderCellDef class="text-center"> Sl No. </th>
 			<td mat-cell *matCellDef="let element" class="text-center" > {{element.slNo}} </td>
 		  </ng-container>
 
@@ -95,9 +95,6 @@
 			  {{ element.status || 'NA' }}</span>
 			</td>
 		  </ng-container>
-
-		  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-		  <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{'table-striped-custom': row.slNo % 2 === 0}"></tr>
 		</app-table>
 		
 	  </div>

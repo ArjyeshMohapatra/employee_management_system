@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { NotificationService } from 'src/app/core/services/notification.service';
 import { EmployeeService } from 'src/app/core/services/employee.service';
  
 @Component({
@@ -7,15 +9,22 @@ import { EmployeeService } from 'src/app/core/services/employee.service';
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.css']
 })
-export class EditProfileComponent implements OnInit {
+export class EditProfileComponent implements OnInit, OnDestroy {
  
   editForm!: FormGroup;
-  message = '';
   employeeId!: string;
+  isEditing = false;
+  hasChanges = false;
+  isApplying = false;
+  activeSection: 'employee' | 'employeeDetails' | 'jobDetails' = 'employee';
+
+  private originalFormValue = '';
+  private formChanges?: Subscription;
  
   constructor(
     private fb: FormBuilder,
-    private empService: EmployeeService
+    private empService: EmployeeService,
+    private notify: NotificationService
   ) {}
  
   ngOnInit(): void {
@@ -24,11 +33,15 @@ export class EditProfileComponent implements OnInit {
     this.employeeId = localStorage.getItem('employeeId') || '';
  
     if (!this.employeeId) {
-      this.message = 'Employee ID not found';
+      this.notify.showWarning('Employee ID missing', 'Employee ID was not found for this profile.');
       return;
     }
  
     this.loadEmployeeData();
+  }
+
+  ngOnDestroy(): void {
+    this.formChanges?.unsubscribe();
   }
  
   // ---------------- FORM ----------------
@@ -64,6 +77,11 @@ export class EditProfileComponent implements OnInit {
         prev_org: ['']
       })
     });
+
+    this.editForm.disable();
+    this.formChanges = this.editForm.valueChanges.subscribe(() => {
+      this.hasChanges = this.serializeFormValue() !== this.originalFormValue;
+    });
   }
  
   // ---------------- LOAD DATA ----------------
@@ -85,7 +103,6 @@ export class EditProfileComponent implements OnInit {
             ...data.jobDetails,
             joining_date: this.formatDate(data.jobDetails.joining_date),
  
-            // array → string for UI
             skills: data.jobDetails.skills?.join(', '),
  
             prev_org: data.jobDetails.prev_org
@@ -93,6 +110,16 @@ export class EditProfileComponent implements OnInit {
               .join(', ')
           }
         });
+
+        this.originalFormValue = this.serializeFormValue();
+        this.hasChanges = false;
+        this.isEditing = false;
+        this.isApplying = false;
+        this.editForm.disable();
+      },
+      error: (err) => {
+        this.isApplying = false;
+        this.notify.showError(err);
       }
     });
   }
@@ -101,13 +128,30 @@ export class EditProfileComponent implements OnInit {
   formatDate(date: string) {
     return date ? date.split('T')[0] : '';
   }
+
+  enableEditing(): void {
+    this.isEditing = true;
+    this.hasChanges = false;
+    this.originalFormValue = this.serializeFormValue();
+    this.editForm.enable();
+  }
+
+  selectSection(section: 'employee' | 'employeeDetails' | 'jobDetails'): void {
+    this.activeSection = section;
+  }
+
+  get canApply(): boolean {
+    return this.isEditing && this.hasChanges && !this.isApplying;
+  }
  
   // ---------------- UPDATE ----------------
   onUpdate() {
+    if (!this.canApply) return;
+
+    this.isApplying = true;
  
-    const form = this.editForm.value;
+    const form = this.editForm.getRawValue();
  
-    // ✅ FINAL STRUCTURE EXACTLY MATCHING BACKEND
     const payload = {
       employee: {
         ...form.employee
@@ -120,7 +164,6 @@ export class EditProfileComponent implements OnInit {
       jobDetails: {
         ...form.jobDetails,
  
-        // string → array
         skills: form.jobDetails.skills
           ? form.jobDetails.skills.split(',').map((s: string) => s.trim())
           : [],
@@ -134,17 +177,19 @@ export class EditProfileComponent implements OnInit {
       }
     };
  
-    console.log("FINAL PAYLOAD →", payload);
- 
     this.empService.updateEmployee(this.employeeId, payload).subscribe({
       next: () => {
-        this.message = 'Profile updated successfully';
+        this.notify.showSuccess('Profile updated', 'Your profile changes were applied successfully.');
         this.loadEmployeeData();
       },
       error: (err) => {
-        console.error(err);
-        this.message = err.error?.message || 'Update failed';
+        this.isApplying = false;
+        this.notify.showError(err);
       }
     });
+  }
+
+  private serializeFormValue(): string {
+    return JSON.stringify(this.editForm.getRawValue());
   }
 }

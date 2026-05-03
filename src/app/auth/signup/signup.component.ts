@@ -4,6 +4,7 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 import { EmailValidator } from 'src/app/core/validators/email.validator';
+import { NotificationService } from 'src/app/core/services/notification.service';
 
 interface AuthResponse {
   success?: boolean;
@@ -18,7 +19,6 @@ interface AuthResponse {
 export class SignUpComponent implements OnDestroy {
 
   signupForm!: FormGroup;
-  feedbackMessage = '';
   isSubmitting = false;
   isRedirecting = false;
   private redirectTimerId?: ReturnType<typeof setTimeout>;
@@ -26,7 +26,8 @@ export class SignUpComponent implements OnDestroy {
   constructor(
     private auth: AuthService,
     private router: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private notify: NotificationService
   ) {
     this.signupForm = this.fb.group({
       email: ['', [Validators.required, EmailValidator]],
@@ -44,12 +45,11 @@ export class SignUpComponent implements OnDestroy {
   onSignUp(): void {
     if (this.signupForm.invalid || this.isSubmitting || this.isRedirecting) {
       this.signupForm.markAllAsTouched();
-      this.feedbackMessage = 'Please complete the form correctly.';
+      this.notify.showWarning('Invalid form', 'Please complete the form correctly.');
       return;
     }
 
     const { email, password, role } = this.signupForm.value;
-    this.feedbackMessage = '';
     this.isSubmitting = true;
 
     this.auth.signUp(email, password, role)
@@ -59,7 +59,7 @@ export class SignUpComponent implements OnDestroy {
       .subscribe({
       next: (res: AuthResponse) => {
         if (res?.success) {
-          this.feedbackMessage = 'Signup successful. Redirecting to login...';
+          this.notify.showSuccess('Signup successful', 'Redirecting to login...');
           this.isRedirecting = true;
           this.redirectTimerId = setTimeout(() => {
             this.router.navigate(['/login']);
@@ -67,10 +67,10 @@ export class SignUpComponent implements OnDestroy {
           return;
         }
 
-        this.feedbackMessage = res?.message || 'Signup failed. Please try again.';
+        this.notify.showWarning('Signup failed', res?.message || 'Please try again.');
       },
       error: () => {
-        this.feedbackMessage = 'Unable to sign up right now. Please try again.';
+        this.notify.showWarning('Signup unavailable', 'Unable to sign up right now. Please try again.');
       }
     });
   }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { LeaveService } from 'src/app/core/services/leave.service';
+import { NotificationService } from 'src/app/core/services/notification.service';
  
 interface LeaveRequest {
   id: string;
@@ -32,20 +33,19 @@ export class LeaveMgmtComponent implements OnInit {
     'to_date',
     'reason',
     'status'
-    // ✅ NEW COLUMN
   ];
  
   dataSource = new MatTableDataSource<LeaveRequest>([]);
  
   constructor(
     private fb: FormBuilder,
-    private leaveService: LeaveService
+    private leaveService: LeaveService,
+    private notify: NotificationService
   ) {}
  
   ngOnInit(): void {
     this.initForm();
  
-    // ✅ GET ROLE FROM LOCAL STORAGE
     this.role = localStorage.getItem('role') || '';
  
     const normalizedRole = this.role.toUpperCase().replace('ROLE_', '');
@@ -69,10 +69,17 @@ export class LeaveMgmtComponent implements OnInit {
   }
  
   onSubmit() {
-    if (this.leaveForm.invalid) return;
+    if (this.leaveForm.invalid) {
+      this.leaveForm.markAllAsTouched();
+      this.notify.showWarning('Missing details', 'Please fill the leave dates and reason.');
+      return;
+    }
  
     const empId = this.getEmpId();
-    if (!empId) return;
+    if (!empId) {
+      this.notify.showWarning('Employee ID missing', 'Employee ID was not found for this leave request.');
+      return;
+    }
  
     const payload = {
       from_date: this.formatDate(this.leaveForm.value.from_date),
@@ -83,10 +90,11 @@ export class LeaveMgmtComponent implements OnInit {
     this.leaveService.applyLeave(empId, payload).subscribe({
       next: () => {
         this.leaveForm.reset();
+        this.notify.showSuccess('Leave applied', 'Your leave request was submitted successfully.');
         this.loadLeaves();
       },
       error: (err) => {
-        alert(err?.error?.message || 'Leave error');
+        this.notify.showError(err);
       }
     });
   }
@@ -106,33 +114,43 @@ export class LeaveMgmtComponent implements OnInit {
           ...item,
           slNo: i + 1
         }));
-      }
+      },
+      error: (err) => this.notify.showError(err)
     });
   }
  
-  // ✅ APPROVE
   approveLeave(empId: string) {
     if (!this.isHrOrAdmin) {
-      alert('Only HR or Admin can approve');
+      this.notify.showWarning('Permission denied', 'Only HR or Admin can approve leave requests.');
       return;
     }
  
     this.leaveService.updateLeaveStatus(empId, 'APPROVED')
-      .subscribe(() => this.loadLeaves());
+      .subscribe({
+        next: () => {
+          this.notify.showSuccess('Leave approved', 'The leave request was approved.');
+          this.loadLeaves();
+        },
+        error: (err) => this.notify.showError(err)
+      });
   }
  
-  // ✅ REJECT
   rejectLeave(empId: string) {
     if (!this.isHrOrAdmin) {
-      alert('Only HR or Admin can reject');
+      this.notify.showWarning('Permission denied', 'Only HR or Admin can reject leave requests.');
       return;
     }
  
     this.leaveService.updateLeaveStatus(empId, 'REJECTED')
-      .subscribe(() => this.loadLeaves());
+      .subscribe({
+        next: () => {
+          this.notify.showSuccess('Leave rejected', 'The leave request was rejected.');
+          this.loadLeaves();
+        },
+        error: (err) => this.notify.showError(err)
+      });
   }
 
   onPageChange(event: any): void {
-    console.log(event);
   }
 }

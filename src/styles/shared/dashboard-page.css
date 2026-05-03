@@ -4,9 +4,7 @@
 	padding-top: 5rem;
 	flex-direction: column;
 	overflow: hidden;
-	background:
-		radial-gradient(circle at top right, rgba(59, 130, 246, 0.08), transparent 30%),
-		linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+	background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
 }
 
 .dashboard-page .dashboard-body {
@@ -31,8 +29,9 @@ body.sidebar-collapsed .dashboard-page .content {
 .dashboard-page .content-panel {
 	min-height: calc(100vh - 9rem);
 	border: 1px solid rgba(148, 163, 184, 0.24);
-	background: #ffffff;
-	box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+	height: 100%;
+	background: rgba(255, 255, 255, 0.94);
+	box-shadow: var(--app-shadow);
 	padding: 24px;
 }
 
@@ -59,7 +58,6 @@ body.sidebar-collapsed .dashboard-page .content {
 
 	.dashboard-page .content {
 		margin-left: 0;
-		padding: 16px;
 		transition: margin-top 0.28s ease;
 	}
 
@@ -73,5 +71,6 @@ body.sidebar-collapsed .dashboard-page .content {
 
 	.dashboard-page .content-panel {
 		padding: 18px;
+		height: 100%;
 	}
 }

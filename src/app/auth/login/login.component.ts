@@ -24,7 +24,6 @@ interface AuthResponse {
 export class LoginComponent {
   loginForm: FormGroup;
 
-  feedbackMessage = '';
   isSubmitting = false;
 
   constructor(
@@ -49,7 +48,6 @@ export class LoginComponent {
     }
 
     const { email, password } = this.loginForm.value;
-    this.feedbackMessage = '';
     this.isSubmitting = true;
 
     this.auth.login(email, password)

@@ -8,17 +8,26 @@ export class NotificationService {
   title = '';
   message = '';
   type = '';
+  private timer?: ReturnType<typeof setTimeout>;
   constructor() { }
 
   show(title: string, message: string, type = 'error') {
+    if (this.timer) clearTimeout(this.timer);
+
     this.title = title;
     this.message = message;
     this.type = type;
     this.visible = true;
+
+    this.timer = setTimeout(() => {
+      this.close();
+    }, 4500);
   }
 
   close() {
     this.visible = false;
+    if (this.timer) clearTimeout(this.timer);
+    this.timer = undefined;
   }
 
   showError(error: any) {

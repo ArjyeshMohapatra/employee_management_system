@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import { NotificationService } from 'src/app/core/services/notification.service';
 import { LeaveService } from 'src/app/core/services/leave.service';
  
 interface LeaveRequest {
-  id: string; // ✅ leaveId (IMPORTANT)
+  id: string;
   emp_id: string;
   from_date: string;
   to_date: string;
@@ -32,13 +33,15 @@ export class HRPortalComponent implements OnInit {
  
   dataSource = new MatTableDataSource<LeaveRequest>([]);
  
-  constructor(private leaveService: LeaveService) {}
+  constructor(
+    private leaveService: LeaveService,
+    private notify: NotificationService
+  ) {}
  
   ngOnInit(): void {
     this.loadAllLeaves();
   }
  
-  // ✅ LOAD ALL LEAVES (ALL STATUS)
   loadAllLeaves() {
     Promise.all([
       this.leaveService.getLeavesByStatus('PENDING').toPromise(),
@@ -57,28 +60,31 @@ export class HRPortalComponent implements OnInit {
         slNo: index + 1
       }));
     })
-    .catch(err => console.error('Error loading leaves:', err));
+    .catch(err => this.notify.showError(err));
   }
  
-  // ✅ APPROVE (USES LEAVE ID)
   approveLeave(leaveId: string) {
     this.leaveService.updateLeaveStatus(leaveId, 'APPROVED')
       .subscribe({
-        next: () => this.loadAllLeaves(),
-        error: (err) => console.error(err)
+        next: () => {
+          this.notify.showSuccess('Leave approved', 'The leave request was approved.');
+          this.loadAllLeaves();
+        },
+        error: (err) => this.notify.showError(err)
       });
   }
  
-  // ✅ REJECT (USES LEAVE ID)
   rejectLeave(leaveId: string) {
     this.leaveService.updateLeaveStatus(leaveId, 'REJECTED')
       .subscribe({
-        next: () => this.loadAllLeaves(),
-        error: (err) => console.error(err)
+        next: () => {
+          this.notify.showSuccess('Leave rejected', 'The leave request was rejected.');
+          this.loadAllLeaves();
+        },
+        error: (err) => this.notify.showError(err)
       });
   }
 
   onPageChange(event: any): void {
-    console.log(event);
   }
 }

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EmployeeService } from 'src/app/core/services/employee.service';
+import { NotificationService } from 'src/app/core/services/notification.service';
 import { AadharValidator } from 'src/app/core/validators/aadhar.validator';
 import { PhoneValidator } from 'src/app/core/validators/phone.validator';
 import { SalaryValidator } from 'src/app/core/validators/salary.validator';
@@ -14,12 +15,12 @@ import { SalaryValidator } from 'src/app/core/validators/salary.validator';
 export class EmpBasicDetailsComponent {
 
   empForm: FormGroup;
-  message = '';
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private employeeService: EmployeeService
+    private employeeService: EmployeeService,
+    private notify: NotificationService
   ) {
 
     this.empForm = this.fb.group({
@@ -64,13 +65,10 @@ export class EmpBasicDetailsComponent {
   }
 
   onSubmit() {
-
-    console.log('SUBMIT CLICKED');
-
     this.empForm.markAllAsTouched();
 
     if (this.empForm.invalid) {
-      this.message = 'Please fill all required fields';
+      this.notify.showWarning('Missing details', 'Please fill all required fields.');
       return;
     }
 
@@ -91,16 +89,9 @@ export class EmpBasicDetailsComponent {
       }
     };
 
-    console.log('FINAL PAYLOAD:', payload);
-
     this.employeeService.registerEmployee(payload).subscribe({
       next: (res: any) => {
-        console.log('================ SUCCESS RESPONSE ================');
-        console.log('Response:', res);
-        console.log('Message:', res?.message);
-        console.log('Full Response:', JSON.stringify(res, null, 2));
-
-        this.message = res?.message || 'Employee registered successfully';
+        this.notify.showSuccess('Employee registered', res?.message || 'Employee registered successfully.');
 
         const empId = res.data.employee.id;
         localStorage.setItem('employeeId', empId);
@@ -112,15 +103,10 @@ export class EmpBasicDetailsComponent {
       },
 
       error: (err) => {
-        console.log('================ ERROR RESPONSE ================');
-        console.log('Status:', err.status);
-        console.log('Error Body:', err.error);
-        console.log('Backend Message:', err.error?.message);
-
         if (err.status === 409) {
-          this.message = 'Employee already exists (duplicate entry)';
+          this.notify.showWarning('Duplicate employee', 'Employee already exists.');
         } else {
-          this.message = err.error?.message || 'Failed to register employee';
+          this.notify.showError(err);
         }
       }
     });

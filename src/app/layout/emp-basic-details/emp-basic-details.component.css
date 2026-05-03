@@ -9,7 +9,7 @@
 .form-eyebrow,
 .section-index {
   margin: 0;
-  color: #2563eb;
+  color: #0f766e;
   font-size: 0.82rem;
   font-weight: 700;
   letter-spacing: 0.14em;
@@ -22,16 +22,6 @@
   font-size: clamp(1.5rem, 2.4vw, 1.9rem);
   font-weight: 800;
   line-height: 1.15;
-}
-
-.feedback {
-  margin: 12px 0 0;
-  padding: 12px 14px;
-  border-radius: 12px;
-  border: 1px solid rgba(37, 99, 235, 0.18);
-  background: rgba(37, 99, 235, 0.08);
-  color: #0f172a;
-  font-weight: 600;
 }
 
 .employee-form {
@@ -62,7 +52,7 @@
   width: 4px;
   height: calc(100% - 8px);
   border-radius: 999px;
-  background: linear-gradient(180deg, #2563eb, #1d4ed8);
+  background: #0f766e;
 }
 
 .section-heading h3 {
