@@ -3,16 +3,16 @@ import { CommonModule } from '@angular/common';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './dashboard.component';
-import { PageLayoutComponent } from 'src/app/shared/ui/page-layout/page-layout.component';
+import { PageLayoutModule } from 'src/app/shared/ui/page-layout/page-layout.module';
 
 @NgModule({
   declarations: [
     DashboardComponent,
-    PageLayoutComponent
   ],
   imports: [
     CommonModule,
-    DashboardRoutingModule
+    DashboardRoutingModule,
+    PageLayoutModule
   ]
 })
 export class DashboardModule { }

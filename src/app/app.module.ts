@@ -11,19 +11,13 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HeaderComponent } from './shared/ui/header/header.component';
-import { SidebarComponent } from './shared/ui/sidebar/sidebar.component';
 import { NotificationComponent } from './shared/notification/notification.component';
-import { PageLayoutComponent } from './shared/ui/page-layout/page-layout.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    HeaderComponent,
-    SidebarComponent,
     NotificationComponent,
-    PageLayoutComponent,
   ],
   imports: [
     BrowserModule,

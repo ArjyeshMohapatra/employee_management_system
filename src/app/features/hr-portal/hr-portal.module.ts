@@ -5,18 +5,18 @@ import { HRPortalRoutingModule } from './hr-portal-routing.module';
 import { HRPortalComponent } from './hr-portal.component';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { PageLayoutComponent } from 'src/app/shared/ui/page-layout/page-layout.component';
+import { PageLayoutModule } from 'src/app/shared/ui/page-layout/page-layout.module';
 
 @NgModule({
   declarations: [
     HRPortalComponent,
-    PageLayoutComponent
   ],
   imports: [
     CommonModule,
     HRPortalRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    PageLayoutModule
   ]
 })
 export class HRPortalModule { }

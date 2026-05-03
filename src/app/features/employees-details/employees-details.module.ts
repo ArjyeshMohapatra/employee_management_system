@@ -5,18 +5,18 @@ import { EmployeesDetailsRoutingModule } from './employees-details-routing.modul
 import { EmployeesDetailsComponent } from './employees-details.component';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { PageLayoutComponent } from 'src/app/shared/ui/page-layout/page-layout.component';
+import { PageLayoutModule } from 'src/app/shared/ui/page-layout/page-layout.module';
 
 @NgModule({
   declarations: [
     EmployeesDetailsComponent,
-    PageLayoutComponent
   ],
   imports: [
     CommonModule,
     EmployeesDetailsRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    PageLayoutModule
   ]
 })
 export class EmployeesDetailsModule { }
