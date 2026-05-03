@@ -46,7 +46,12 @@
 	  </div>
 
 	  <div class="table-responsive border rounded">
-		<table mat-table [dataSource]="dataSource" class="w-100 attendance-table">
+		<app-table 
+		[dataSource]="dataSource" 
+		[displayedColumns]="displayedColumns"
+		[totalRecords]="totalRecords"
+		(pageChange)="onPageChange($event)"
+		class="w-100 attendance-table">
 
 		  <ng-container matColumnDef="slNo">
 			<th mat-header-cell *matHeaderCellDef class="text-center"> Sl. No </th>
@@ -93,12 +98,7 @@
 
 		  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
 		  <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{'table-striped-custom': row.slNo % 2 === 0}"></tr>
-		</table>
-		<mat-paginator
-			[length]="totalRecords"
-			[pageSize]="5"
-			[pageSizeOptions]="[5,10,20,30]"
-			(page)="onPageChange($event)">
-		</mat-paginator>
+		</app-table>
+		
 	  </div>
 </app-page-layout>

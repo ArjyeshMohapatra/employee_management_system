@@ -18,7 +18,8 @@ interface LeaveRequest {
   styleUrls: ['./hr-portal.component.css']
 })
 export class HRPortalComponent implements OnInit {
- 
+
+  totalRecords: number = 0;
   displayedColumns: string[] = [
     'slNo',
     'emp_id',
@@ -75,5 +76,9 @@ export class HRPortalComponent implements OnInit {
         next: () => this.loadAllLeaves(),
         error: (err) => console.error(err)
       });
+  }
+
+  onPageChange(event: any): void {
+    console.log(event);
   }
 }

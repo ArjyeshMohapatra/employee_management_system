@@ -32,7 +32,12 @@
 
   <!-- Leave Table -->
   <div class="table-responsive border rounded">
-    <table mat-table [dataSource]="dataSource" class="w-100">
+    <app-table 
+    [dataSource]="dataSource"
+    [displayedColumns]="displayedColumns"
+    [totalRecords]="totalRecords"
+    (pageChange)="onPageChange($event)"
+    class="w-100">
 
       <!-- SL -->
       <ng-container matColumnDef="slNo">
@@ -79,11 +84,9 @@
         </td>
       </ng-container>
 
-      <!-- ❌ ACTION COLUMN REMOVED -->
-
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
-    </table>
+    </app-table>
   </div>
 </app-page-layout>

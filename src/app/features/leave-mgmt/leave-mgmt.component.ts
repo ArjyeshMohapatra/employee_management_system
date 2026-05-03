@@ -19,7 +19,8 @@ interface LeaveRequest {
   styleUrls: ['./leave-mgmt.component.css']
 })
 export class LeaveMgmtComponent implements OnInit {
- 
+
+  totalRecords: number = 0;
   leaveForm!: FormGroup;
  
   role: string = '';
@@ -129,5 +130,9 @@ export class LeaveMgmtComponent implements OnInit {
  
     this.leaveService.updateLeaveStatus(empId, 'REJECTED')
       .subscribe(() => this.loadLeaves());
+  }
+
+  onPageChange(event: any): void {
+    console.log(event);
   }
 }

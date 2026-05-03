@@ -23,9 +23,11 @@
 	  </div>
 
 	  <div class="table-wrapper">
-		<table
-		  mat-table
+		<app-table
 		  [dataSource]="dataSource"
+		  [displayedColumns]="displayedColumns"
+  		  [totalRecords]="totalRecords"
+  		  (pageChange)="onPageChange($event)">
 		  class="table table-hover mb-0 mat-elevation-z0"
 		  matSort
 		>
@@ -121,12 +123,6 @@
 
 		  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
 		  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-		</table>
-		<mat-paginator
-			[pageSize]="5"
-			[pageSizeOptions]="[5,10,15]"
-			showFirstLastButtons
-			(page)="onPageChange($event)">
-		  </mat-paginator>
+		</app-table>
 	  </div>
 </app-page-layout>

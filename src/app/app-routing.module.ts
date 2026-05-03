@@ -2,16 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { LoginComponent } from './auth/login/login.component';
-import { SignUpComponent } from './auth/signup/signup.component';
-import { EmpBasicDetailsComponent } from './layout/emp-basic-details/emp-basic-details.component';
-import { DashboardComponent } from './layout/dashboard/dashboard.component';
-import { AuthGuard } from './core/guards/auth.guard';
-import { ForgotPasswordComponent } from './auth/forget-password/forgot-password.component';
-import { EmployeesDetailsComponent } from './features/employees-details/employees-details.component';
-import { EditProfileComponent } from './features/edit-profile/edit-profile.component';
-import { AttendanceMgmtComponent } from './features/attendance-mgmt/attendance-mgmt.component';
-import { LeaveMgmtComponent } from './features/leave-mgmt/leave-mgmt.component';
-import { HRPortalComponent } from './features/hr-portal/hr-portal.component';
 import { GuestGuard } from './core/guards/guest.guard';
 
 const routes: Routes = [

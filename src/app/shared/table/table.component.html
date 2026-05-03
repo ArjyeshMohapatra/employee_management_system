@@ -1,1 +1,17 @@
-<p>mat-table works!</p>
+<div class="table-wrapper">
+
+    <table mat-table [dataSource]="dataSource" class="w-100">
+      <ng-content></ng-content>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  
+    <mat-paginator
+      [length]="totalRecords"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions"
+      (page)="pageChange.emit($event)">
+    </mat-paginator>
+  
+  </div>

@@ -3,7 +3,12 @@
     <h5 class="mb-3">All Leave Requests</h5>
 
     <div class="table-responsive border rounded">
-      <table mat-table [dataSource]="dataSource" class="w-100">
+      <app-table 
+      [dataSource]="dataSource"
+      [displayedColumns]="displayedColumns"
+      [totalRecords]="totalRecords"
+      (pageChange)="onPageChange($event)"
+      class="w-100">
 
         <!-- SL -->
         <ng-container matColumnDef="slNo">
@@ -80,7 +85,7 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
-      </table>
+      </app-table>
     </div>
 
   </div>
