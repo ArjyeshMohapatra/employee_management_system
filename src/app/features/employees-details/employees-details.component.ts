@@ -85,7 +85,7 @@ export class EmployeesDetailsComponent implements OnInit, AfterViewInit {
           designation: res?.jobDetails?.designation ?? '',
           emp_type: res?.jobDetails?.employee_type ?? '',
           gender: res?.gender ?? '',
-          joining_date: res?.jobDetails?.joining_date ?? '',
+          joining_date: this.formatDate(res?.jobDetails?.joining_date) ?? '',
           department: res?.jobDetails?.department ?? '',
           phone: res?.phone ?? '',
           email: res?.additionalInfo?.email ?? ''
@@ -164,5 +164,21 @@ export class EmployeesDetailsComponent implements OnInit, AfterViewInit {
 
   filterEmployees(value: string): void {
     this.dataSource.filter = value.trim().toLowerCase();
+  }
+
+  formatDate(date: string): string {
+    if (!date) return '';
+  
+    const d = new Date(date);
+
+    const day = d.toLocaleDateString('en-US', {weekday: 'long'});
+  
+    const dd = String(d.getDate()).padStart(2, '0');
+  
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+  
+    const yyyy = d.getFullYear();
+  
+    return `${dd}-${mm}-${yyyy} [${day}]`;
   }
 }

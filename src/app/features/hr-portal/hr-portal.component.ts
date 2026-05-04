@@ -5,7 +5,7 @@ import { LeaveService } from 'src/app/core/services/leave.service';
  
 interface LeaveRequest {
   id: string;
-  emp_id: string;
+  employeeName: string;
   from_date: string;
   to_date: string;
   reason: string;
@@ -23,7 +23,7 @@ export class HRPortalComponent implements OnInit {
   totalRecords: number = 0;
   displayedColumns: string[] = [
     'slNo',
-    'emp_id',
+    'employeeName',
     'from_date',
     'to_date',
     'reason',
@@ -43,7 +43,7 @@ export class HRPortalComponent implements OnInit {
 
     this.dataSource.filterPredicate = (row: LeaveRequest, filter: string) => {
       return (
-        row.emp_id.toLowerCase().includes(filter) ||
+        row.employeeName.toLowerCase().includes(filter) ||
         row.from_date.toLowerCase().includes(filter) ||
         row.to_date.toLowerCase().includes(filter) ||
         row.reason.toLowerCase().includes(filter) ||
@@ -58,7 +58,8 @@ export class HRPortalComponent implements OnInit {
       this.leaveService.getLeavesByStatus('APPROVED').toPromise(),
       this.leaveService.getLeavesByStatus('REJECTED').toPromise()
     ])
-    .then((responses: any[]) => {
+      .then((responses: any[]) => {
+        console.log(responses);
       const allData = [
         ...(responses[0]?.data || []),
         ...(responses[1]?.data || []),

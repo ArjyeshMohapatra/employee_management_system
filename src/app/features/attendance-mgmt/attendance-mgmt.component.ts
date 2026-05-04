@@ -26,6 +26,8 @@ export class AttendanceMgmtComponent implements OnInit{
     'status'
   ];
 
+  selectedMonth: string = '';
+  months: string[] = [];
   selectedStatus: string = 'All Status';
   status: string[] = [
     'All Status',
@@ -51,6 +53,8 @@ export class AttendanceMgmtComponent implements OnInit{
         row.actualWorkTime?.toLowerCase().includes(filter)
       );
     };
+
+    this.createDate();
   }
 
   checkIn(): void {
@@ -124,10 +128,7 @@ export class AttendanceMgmtComponent implements OnInit{
   formatDate(date: string): string {
     const d = new Date(date);
   
-    const day =
-      d.toLocaleDateString('en-US', {
-        weekday: 'long'
-      });
+    const day = d.toLocaleDateString('en-US', {weekday: 'long'});
   
     const dd =
       String(d.getDate()).padStart(2, '0');
@@ -171,7 +172,7 @@ export class AttendanceMgmtComponent implements OnInit{
 
         this.totalRecords = res.data.length;
   
-        const rows = res.data.map((item: any, index: number) => ({
+        const rows = (res.data || []).reverse().map((item: any, index: number) => ({
               
               slNo: offset + index + 1,
   
@@ -195,6 +196,7 @@ export class AttendanceMgmtComponent implements OnInit{
         this.allAttendance = rows;
         this.dataSource.data = rows;
         this.addTodayRow();
+        this.applyFilters();
       });
   }
 
@@ -206,30 +208,118 @@ export class AttendanceMgmtComponent implements OnInit{
   
     if (!exists) {
       this.dataSource.data.unshift({
-        slNo: 1,
         date: today,
         firstIn: '',
         lastOut: '',
         actualWorkTime: 'NA',
         status: 'Absent'
       });
-  
-      this.totalRecords++;
     }
+  
+      this.dataSource.data = this.dataSource.data.map((row, index) => ({
+        ...row,
+        slNo: index + 1
+      }));
+    
+      this.totalRecords = this.dataSource.data.length;
   }
 
-  onStatusChange(): void{
-    if (this.selectedStatus === 'All Status') this.dataSource.data = this.allAttendance; 
-    else this.dataSource.data = this.allAttendance.filter(row => row.status === this.selectedStatus);
-    this.totalRecords = this.dataSource.data.length;
+  onStatusChange(): void {
+    this.applyFilters();
   }
-
-  // isWeekend(date: string): boolean{
-  //   const day = new Date(date).getDay();
-  //   return day === 0 || day === 6;
-  // }
 
   filterAttendance(value: string): void {
     this.dataSource.filter = value.trim().toLowerCase();
+  }
+
+  sortAttendance(): void {
+    this.dataSource.data.sort((a, b) => {
+      const first = new Date(
+        a.date.split(' ')[0].split('-').reverse().join('-')
+      ).getTime();
+  
+      const second = new Date(
+        b.date.split(' ')[0].split('-').reverse().join('-')
+      ).getTime();
+  
+      return second - first;
+    });
+  
+    this.dataSource.data = this.dataSource.data.map((row, index) => ({
+      ...row,
+      slNo: index + 1
+    }));
+  
+    this.totalRecords = this.dataSource.data.length;
+  }
+
+  onMonthChange(): void {
+    this.applyFilters();
+  }
+
+  applyFilters(): void {
+    let rows = [...this.allAttendance];
+  
+    if (this.selectedMonth !== 'All') {
+      const monthMap: any = {
+        Jan: '01',
+        Feb: '02',
+        Mar: '03',
+        Apr: '04',
+        May: '05',
+        Jun: '06',
+        Jul: '07',
+        Aug: '08',
+        Sep: '09',
+        Oct: '10',
+        Nov: '11',
+        Dec: '12'
+      };
+  
+      const month =
+        this.selectedMonth.split('-')[0];
+  
+      const year =
+        this.selectedMonth.split('-')[1];
+  
+      const monthNumber =
+        monthMap[month];
+  
+      rows = rows.filter(row =>
+        row.date.includes(`-${monthNumber}-${year}`)
+      );
+    }
+  
+    if (this.selectedStatus !== 'All Status') {
+      rows = rows.filter(row =>
+        row.status === this.selectedStatus
+      );
+    }
+  
+    this.dataSource.data = rows;
+  
+    this.totalPresent =
+      rows.filter(row => row.status === 'Present').length;
+  
+    this.totalAbsent =
+      rows.filter(row => row.status === 'Absent').length;
+  
+    this.sortAttendance();
+  }
+
+  createDate(): void {
+    this.months.push('All');
+  
+    const now = new Date();
+  
+    for (let i = 0; i < 12; i++) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+  
+      const month = d.toLocaleString('en-US', { month: 'short' }) + '-' + d.getFullYear();
+  
+      this.months.push(month);
+  
+      if (i === 0) this.selectedMonth = month;
+    }
   }
 }
