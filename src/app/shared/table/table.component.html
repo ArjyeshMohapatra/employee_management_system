@@ -20,6 +20,12 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       </ng-container>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell text-center p-3" [attr.colspan]="displayedColumns.length">
+          No data to show
+        </td>
+      </tr>
     </table>
   
     <mat-paginator

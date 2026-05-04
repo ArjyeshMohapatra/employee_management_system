@@ -1,0 +1,11 @@
+.form-select{
+    align-items:center;
+    gap:10px;
+    padding:10px 16px;
+    border-radius:999px;
+    border:1px solid #ddd;
+    background:white;
+    width:320px;
+    margin-bottom: 15px;
+    margin-left: 15px;
+}

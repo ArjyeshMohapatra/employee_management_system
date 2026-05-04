@@ -30,6 +30,14 @@ export class HRPortalComponent implements OnInit {
     'status',
     'action'
   ];
+
+  allLeaves: LeaveRequest[] = [];
+  selectedStatus: 'PENDING' | 'APPROVED' | 'REJECTED' = 'PENDING';
+  statuses: ('PENDING' | 'APPROVED' | 'REJECTED')[] = [
+    'PENDING',
+    'APPROVED',
+    'REJECTED'
+  ];
  
   dataSource = new MatTableDataSource<LeaveRequest>([]);
  
@@ -53,25 +61,21 @@ export class HRPortalComponent implements OnInit {
   }
  
   loadAllLeaves() {
-    Promise.all([
-      this.leaveService.getLeavesByStatus('PENDING').toPromise(),
-      this.leaveService.getLeavesByStatus('APPROVED').toPromise(),
-      this.leaveService.getLeavesByStatus('REJECTED').toPromise()
-    ])
-      .then((responses: any[]) => {
-        console.log(responses);
-      const allData = [
-        ...(responses[0]?.data || []),
-        ...(responses[1]?.data || []),
-        ...(responses[2]?.data || [])
-      ];
- 
-      this.dataSource.data = allData.map((item: any, index: number) => ({
-        ...item,
-        slNo: index + 1
-      }));
-    })
-    .catch(err => this.notify.showError(err));
+    this.leaveService.getLeavesByStatus(this.selectedStatus)
+      .subscribe({
+        next: (res: any) => {
+          this.allLeaves = (res.data || []).map(
+            (item: any, index: number) => ({
+              ...item,
+              slNo: index + 1
+            })
+          );
+  
+          this.dataSource.data = this.allLeaves;
+          this.totalRecords = this.allLeaves.length;
+        },
+        error: (err) => this.notify.showError(err)
+      });
   }
  
   approveLeave(leaveId: string) {
@@ -101,5 +105,12 @@ export class HRPortalComponent implements OnInit {
 
   filterLeaves(value: string): void {
     this.dataSource.filter = value.trim().toLowerCase();
+  }
+
+  filterByStatus(value: string): void {
+    this.selectedStatus =
+      value as 'PENDING' | 'APPROVED' | 'REJECTED';
+  
+    this.loadAllLeaves();
   }
 }
