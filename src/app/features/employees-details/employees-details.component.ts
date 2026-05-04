@@ -58,6 +58,16 @@ export class EmployeesDetailsComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.loadEmployees(0, 5);
     this.loadChartData();
+
+    this.dataSource.filterPredicate = (row: any, filter: string) => {
+      return (
+        row.name?.toLowerCase().includes(filter) ||
+        row.email?.toLowerCase().includes(filter) ||
+        row.designation?.toLowerCase().includes(filter) ||
+        row.male?.toLowerCase().includes(filter) ||
+        row.employee_type?.toLowerCase().includes(filter)
+      );
+    }
   }
 
   ngAfterViewInit(): void {
@@ -150,5 +160,9 @@ export class EmployeesDetailsComponent implements OnInit, AfterViewInit {
         responsive: true
       }
     });
+  }
+
+  filterEmployees(value: string): void {
+    this.dataSource.filter = value.trim().toLowerCase();
   }
 }

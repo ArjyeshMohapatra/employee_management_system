@@ -45,6 +45,11 @@
 		</div>
 	  </div>
 
+	  <app-search-bar 
+	  placeholder="Search attendance..."
+	  (search)="filterAttendance($event)" 
+	  ></app-search-bar>
+
 	  <div class="table-responsive border rounded">
 		<app-table 
 		[dataSource]="dataSource" 

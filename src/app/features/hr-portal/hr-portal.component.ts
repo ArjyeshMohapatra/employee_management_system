@@ -40,6 +40,16 @@ export class HRPortalComponent implements OnInit {
  
   ngOnInit(): void {
     this.loadAllLeaves();
+
+    this.dataSource.filterPredicate = (row: LeaveRequest, filter: string) => {
+      return (
+        row.emp_id.toLowerCase().includes(filter) ||
+        row.from_date.toLowerCase().includes(filter) ||
+        row.to_date.toLowerCase().includes(filter) ||
+        row.reason.toLowerCase().includes(filter) ||
+        row.status.toLowerCase().includes(filter)
+      );
+    };
   }
  
   loadAllLeaves() {
@@ -86,5 +96,9 @@ export class HRPortalComponent implements OnInit {
   }
 
   onPageChange(event: any): void {
+  }
+
+  filterLeaves(value: string): void {
+    this.dataSource.filter = value.trim().toLowerCase();
   }
 }

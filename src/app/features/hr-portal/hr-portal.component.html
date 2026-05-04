@@ -2,6 +2,11 @@
   <div class="card p-3">
     <h5 class="mb-3">All Leave Requests</h5>
 
+    <app-search-bar 
+	  placeholder="Search leaves..." 
+    (search)="filterLeaves($event)"
+	  ></app-search-bar>
+
     <div class="table-responsive border rounded">
       <app-table 
       [dataSource]="dataSource"

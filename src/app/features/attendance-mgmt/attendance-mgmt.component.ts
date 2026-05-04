@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AttendanceService } from 'src/app/core/services/attendance.service';
 import { NotificationService } from 'src/app/core/services/notification.service';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-attendance-mgmt',
@@ -34,7 +35,7 @@ export class AttendanceMgmtComponent implements OnInit{
     // 'WFH'
   ];
 
-  dataSource: any[] = [];
+  dataSource = new MatTableDataSource<any>([]);
 
   constructor(
     private attendanceService: AttendanceService,
@@ -42,7 +43,14 @@ export class AttendanceMgmtComponent implements OnInit{
   ) { }
   
   ngOnInit(): void {
-    this.loadAttendance(0,5);
+    this.loadAttendance(0, 5);
+    this.dataSource.filterPredicate = (row: any, filter: string) => {
+      return (
+        row.date?.toLowerCase().includes(filter) ||
+        row.status?.toLowerCase().includes(filter) ||
+        row.actualWorkTime?.toLowerCase().includes(filter)
+      );
+    };
   }
 
   checkIn(): void {
@@ -69,7 +77,7 @@ export class AttendanceMgmtComponent implements OnInit{
     const employeeId = localStorage.getItem('employeeId');
     if (!employeeId) return;
   
-    if (!this.dataSource[0]?.firstIn) {
+    if (!this.dataSource?.data[0]?.firstIn) {
       this.notify.showWarning('Warning', 'Please check in first');
       return;
     }
@@ -185,7 +193,7 @@ export class AttendanceMgmtComponent implements OnInit{
         // this.totalWFH = res.data.filter((row: any) => row.status === 3).length;
 
         this.allAttendance = rows;
-        this.dataSource = rows;
+        this.dataSource.data = rows;
         this.addTodayRow();
       });
   }
@@ -194,10 +202,10 @@ export class AttendanceMgmtComponent implements OnInit{
     const today = this.getToday();
   
     const exists =
-      this.dataSource.some(row => row.date === today);
+      this.dataSource.data.some(row => row.date === today);
   
     if (!exists) {
-      this.dataSource.unshift({
+      this.dataSource.data.unshift({
         slNo: 1,
         date: today,
         firstIn: '',
@@ -211,13 +219,17 @@ export class AttendanceMgmtComponent implements OnInit{
   }
 
   onStatusChange(): void{
-    if (this.selectedStatus === 'All Status') this.dataSource = this.allAttendance; 
-    else this.dataSource = this.allAttendance.filter(row => row.status === this.selectedStatus);
-    this.totalRecords = this.dataSource.length;
+    if (this.selectedStatus === 'All Status') this.dataSource.data = this.allAttendance; 
+    else this.dataSource.data = this.allAttendance.filter(row => row.status === this.selectedStatus);
+    this.totalRecords = this.dataSource.data.length;
   }
 
   // isWeekend(date: string): boolean{
   //   const day = new Date(date).getDay();
   //   return day === 0 || day === 6;
   // }
+
+  filterAttendance(value: string): void {
+    this.dataSource.filter = value.trim().toLowerCase();
+  }
 }

@@ -30,6 +30,11 @@
     </form>
   </div>
 
+  <app-search-bar 
+	  placeholder="Search leaves..." 
+    (search)="filterLeaves($event)"
+	  ></app-search-bar>
+
   <!-- Leave Table -->
   <div class="table-responsive border rounded">
     <app-table 

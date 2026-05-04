@@ -22,6 +22,10 @@
 		<canvas id="deptChart"></canvas>
 	  </div>
 
+	  <app-search-bar 
+	  placeholder="Search employee..."
+	  (search)="filterEmployees($event)"
+	  ></app-search-bar>
 	  <div class="table-wrapper">
 		<app-table
 		  [dataSource]="dataSource"

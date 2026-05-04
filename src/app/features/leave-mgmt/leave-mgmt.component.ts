@@ -54,6 +54,15 @@ export class LeaveMgmtComponent implements OnInit {
       normalizedRole === 'HR' || normalizedRole === 'ADMIN';
  
     this.loadLeaves();
+
+    this.dataSource.filterPredicate = (row: LeaveRequest, filter: string) => {
+      return (
+        row.from_date.toLowerCase().includes(filter) ||
+        row.to_date.toLowerCase().includes(filter) ||
+        row.reason.toLowerCase().includes(filter) ||
+        row.status.toLowerCase().includes(filter)
+      );
+    };
   }
  
   initForm() {
@@ -152,5 +161,9 @@ export class LeaveMgmtComponent implements OnInit {
   }
 
   onPageChange(event: any): void {
+  }
+
+  filterLeaves(value: string): void {
+    this.dataSource.filter = value.trim().toLowerCase();
   }
 }

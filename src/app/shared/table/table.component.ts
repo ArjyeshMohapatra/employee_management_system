@@ -15,16 +15,17 @@ import {
   SimpleChanges
 } from '@angular/core';
 
-import { MatColumnDef, MatTable } from '@angular/material/table';
+import { MatColumnDef, MatTable, MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css']
 })
+  // AfterContentInit runs after projected content loads
 export class TableComponent implements AfterContentInit, OnChanges, OnDestroy {
 
-  @Input() dataSource: any;
+  @Input() dataSource = new MatTableDataSource<any>([]);
   @Input() displayedColumns: string[] = [];
   @Input() totalRecords = 0;
   @Input() pageSize = 5;
@@ -38,9 +39,13 @@ export class TableComponent implements AfterContentInit, OnChanges, OnDestroy {
   columnsReady = false;
   columnWidths: { [key: string]: number } = {};
 
+  // emits paginator event to parent
   @Output() pageChange = new EventEmitter<any>();
 
+  // get element/component from own's html
   @ViewChild(MatTable, { static: true }) table!: MatTable<any>;
+
+  // finds and collects all projected matColumnDefs from parents
   @ContentChildren(MatColumnDef, { descendants: true }) columns!: QueryList<MatColumnDef>;
 
   private currentColumn = '';
@@ -109,8 +114,9 @@ export class TableComponent implements AfterContentInit, OnChanges, OnDestroy {
 
   private resizeColumn = (event: MouseEvent): void => {
     if (!this.currentColumn) return;
-
+    // 470 - 400 = 70 px
     const diff = event.pageX - this.startX;
+    // max(180,180+70)
     const newWidth = Math.max(this.minColumnWidth, this.startWidth + diff);
 
     this.columnWidths = {
