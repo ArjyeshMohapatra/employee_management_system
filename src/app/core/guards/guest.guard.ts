@@ -13,8 +13,7 @@ export class GuestGuard implements CanActivate {
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     const token = localStorage.getItem('authToken');
     if (token) {
-      this.router.navigate(['/dashboard']);
-      return false;
+      this.router.parseUrl('/dashboard');
     }
     return true;
   }

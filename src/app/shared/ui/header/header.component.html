@@ -12,7 +12,7 @@
         *ngIf="showPopup"
         (click)="$event.stopPropagation()"
       >
-        <span class="profile-option">Profile</span>
+        <a routerLink="/edit-profile" style="text-decoration: none;color: inherit;"><span class="profile-option">Profile</span></a>
         <span class="logout" (click)="logout()">Logout</span>
       </div>
     </div>

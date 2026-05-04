@@ -74,6 +74,10 @@ const routes: Routes = [
       import('./features/hr-portal/hr-portal.module')
         .then(m => m.HRPortalModule),
     canActivate: [AuthGuard]  
+  },
+  {
+    path: '**',
+    redirectTo: 'login'
   }
 ];
 
