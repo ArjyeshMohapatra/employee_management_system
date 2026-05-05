@@ -1,9 +1,45 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { EmployeeService } from 'src/app/core/services/employee.service';
- 
+import { PhoneValidator } from 'src/app/core/validators/phone.validator';
+import { ScriptValidator } from 'src/app/core/validators/script-validator.validator';
+import { AadharValidator } from 'src/app/core/validators/aadhar.validator';
+import { SalaryValidator } from 'src/app/core/validators/salary.validator';
+
+export interface EmployeeProfileForm{
+  employee: FormGroup<{
+    first_name: FormControl<string | null>;
+    last_name: FormControl<string | null>;
+    phone: FormControl<string | null>;
+    date_of_birth: FormControl<string | null>;
+    gender: FormControl<string | null>;
+  }>;
+  employeeDetails: FormGroup<{
+    address: FormControl<string | null>;
+    city: FormControl<string | null>;
+    state: FormControl<string | null>;
+    country: FormControl<string | null>;
+    pincode: FormControl<string | null>;
+    emergency_contact: FormControl<string | null>;
+    marital_status: FormControl<string | null>;
+    aadhar_no: FormControl<string | null>;
+    father_name: FormControl<string | null>;
+    mother_name: FormControl<string | null>;
+  }>;
+  jobDetails: FormGroup<{
+    designation: FormControl<string | null>;
+    department: FormControl<string | null>;
+    employee_type: FormControl<string | null>;
+    salary: FormControl<string | null>;
+    joining_date: FormControl<string | null>;
+    experience_duration: FormControl<string | null>;
+    skills: FormControl<string | null>;
+    prev_org: FormControl<string | null>;
+  }>;
+}
+
 @Component({
   selector: 'app-edit-profile',
   templateUrl: './edit-profile.component.html',
@@ -11,11 +47,11 @@ import { EmployeeService } from 'src/app/core/services/employee.service';
 })
 export class EditProfileComponent implements OnInit, OnDestroy {
  
-  editForm!: FormGroup;
+  editForm!: FormGroup<EmployeeProfileForm>
   employeeId!: string;
-  isEditing = false;
-  hasChanges = false;
-  isApplying = false;
+  isEditing: boolean = false;
+  hasChanges: boolean = false;
+  isApplying: boolean = false;
   activeSection: 'employee' | 'employeeDetails' | 'jobDetails' = 'employee';
 
   private originalFormValue = '';
@@ -46,35 +82,35 @@ export class EditProfileComponent implements OnInit, OnDestroy {
  
   // ---------------- FORM ----------------
   initForm() {
-    this.editForm = this.fb.group({
+    this.editForm = this.fb.group<EmployeeProfileForm>({
       employee: this.fb.group({
-        first_name: [''],
-        last_name: [''],
-        phone: [''],
-        date_of_birth: [''],
-        gender: ['']
+        first_name: ['', [Validators.required,ScriptValidator]],
+        last_name: ['', [Validators.required, ScriptValidator]],
+        phone: ['', [Validators.required,PhoneValidator]],
+        date_of_birth: ['', Validators.required],
+        gender: ['', Validators.required]
       }),
       employeeDetails: this.fb.group({
-        address: [''],
-        city: [''],
-        state: [''],
-        country: [''],
+        address: ['', [Validators.required, ScriptValidator]],
+        city: ['', [Validators.required, ScriptValidator]],
+        state: ['', [Validators.required, ScriptValidator]],
+        country: ['', [Validators.required, ScriptValidator]],
         pincode: [''],
-        emergency_contact: [''],
-        marital_status: [''],
-        aadhar_no: [''],
-        father_name: [''],
-        mother_name: ['']
+        emergency_contact: ['', [Validators.required, PhoneValidator]],
+        marital_status: ['', Validators.required],
+        aadhar_no: ['', [Validators.required, AadharValidator]],
+        father_name: ['',Validators.required],
+        mother_name: ['', Validators.required]
       }),
       jobDetails: this.fb.group({
-        designation: [''],
-        department: [''],
-        employee_type: [''],
-        salary: [''],
-        joining_date: [''],
-        experience_duration: [''],
-        skills: [''],
-        prev_org: ['']
+        designation: ['', ScriptValidator],
+        department: ['', Validators.required],
+        employee_type: ['', Validators.required],
+        salary: ['', [Validators.required, SalaryValidator]],
+        joining_date: ['', Validators.required],
+        experience_duration: ['', Validators.required],
+        skills: ['', Validators.required],
+        prev_org: ['', Validators.required]
       })
     });
 
@@ -191,5 +227,17 @@ export class EditProfileComponent implements OnInit, OnDestroy {
 
   private serializeFormValue(): string {
     return JSON.stringify(this.editForm.getRawValue());
+  }
+
+  get employeeGroup() {
+    return this.editForm.controls.employee;
+  }
+  
+  get detailsGroup() {
+    return this.editForm.controls.employeeDetails;
+  }
+  
+  get jobGroup() {
+    return this.editForm.controls.jobDetails;
   }
 }

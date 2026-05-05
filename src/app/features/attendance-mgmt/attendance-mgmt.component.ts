@@ -137,7 +137,7 @@ export class AttendanceMgmtComponent implements OnInit{
       String(d.getMonth() + 1).padStart(2, '0');
   
     const yyyy =
-      d.getFullYear();
+      d.getFullYear();  
   
     return `${dd}-${mm}-${yyyy} [${day}]`;
   }

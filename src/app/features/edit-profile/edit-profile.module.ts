@@ -6,17 +6,21 @@ import { EditProfileComponent } from './edit-profile.component';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PageLayoutModule } from 'src/app/shared/ui/page-layout/page-layout.module';
+import { ErrorControlComponent } from 'src/app/shared/error-control/error-control.component';
+import { ErrorMsgPipe } from 'src/app/core/pipes/error-msg.pipe';
 
 @NgModule({
   declarations: [
     EditProfileComponent,
+    ErrorControlComponent,
   ],
   imports: [
     CommonModule,
     EditProfileRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    PageLayoutModule
+    PageLayoutModule,
+    ErrorMsgPipe
   ]
 })
 export class EditProfileModule { }

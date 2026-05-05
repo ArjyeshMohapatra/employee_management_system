@@ -82,8 +82,9 @@
             </div>
 
             <div class="field field--4">
-              <label for="phone">Phone</label>
+              <label for="phone">Phone No.</label>
               <input id="phone" type="tel" formControlName="phone" />
+              <app-error-control [control]="employeeGroup.get('phone')" label="Phone No."></app-error-control>
             </div>
 
             <div class="field field--4">
@@ -143,6 +144,7 @@
             <div class="field field--4">
               <label for="emergency">Emergency Contact</label>
               <input id="emergency" formControlName="emergency_contact" />
+              <app-error-control [control]="detailsGroup.get('emergency_contact')" label="Emergency Contact"></app-error-control>
             </div>
 
             <div class="field field--4">
@@ -157,6 +159,7 @@
             <div class="field field--4">
               <label for="aadhar">Aadhar Number</label>
               <input id="aadhar" formControlName="aadhar_no" />
+              <app-error-control [control]="detailsGroup.get('aadhar_no')" label="Aadhar No."></app-error-control>
             </div>
 
             <div class="field field--4">
@@ -214,6 +217,7 @@
             <div class="field field--4">
               <label for="salary">Salary</label>
               <input id="salary" type="number" formControlName="salary" />
+              <app-error-control [control]="jobGroup.get('salary')" label="salary"></app-error-control>
             </div>
 
             <div class="field field--4">
