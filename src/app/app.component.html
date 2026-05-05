@@ -1,2 +1,5 @@
+<!-- app.component.html -->
 <app-notification></app-notification>
-<router-outlet></router-outlet>
+<div [@routeAnimations]="prepareRoute(outlet)" class="route-shell">
+  <router-outlet #outlet="outlet"></router-outlet>
+</div>
