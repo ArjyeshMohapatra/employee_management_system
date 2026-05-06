@@ -111,4 +111,8 @@ export class EmpBasicDetailsComponent {
       }
     });
   }
+
+  public get canLeave(): boolean {
+    return !this.empForm.dirty || this.empForm.pristine;
+  }
 }

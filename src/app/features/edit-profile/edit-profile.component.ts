@@ -240,4 +240,8 @@ export class EditProfileComponent implements OnInit, OnDestroy {
   get jobGroup() {
     return this.editForm.controls.jobDetails;
   }
+
+  public get canLeave(): boolean{
+    return !this.hasChanges;
+  }
 }

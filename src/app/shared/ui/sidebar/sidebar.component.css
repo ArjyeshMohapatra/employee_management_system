@@ -68,7 +68,7 @@
   border-radius: 12px;
   color: #cbd5e1;
   text-decoration: none;
-  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.25s;
 }
 
 .nav-item i {
@@ -107,6 +107,8 @@
   margin: 0;
   overflow: hidden;
   pointer-events: none;
+  transition:
+    opacity 0.5s
 }
 
 .sidebar.sidebar-collapsed .nav-item {
@@ -116,6 +118,14 @@
 
 .sidebar.sidebar-collapsed .nav-item:hover {
   transform: none;
+}
+
+.label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition:
+    opacity 0.5s ease
 }
 
 @media (max-width: 900px) {
@@ -189,6 +199,8 @@
     margin: 0;
     overflow: visible;
     pointer-events: auto;
+    transition:
+      opacity 0.5s
   }
 
   .sidebar.sidebar-collapsed .nav-item {
