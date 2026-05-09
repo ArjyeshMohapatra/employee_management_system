@@ -57,7 +57,7 @@ body.sidebar-collapsed .dashboard-page .content {
 	}
 
 	.dashboard-page .content {
-		margin-left: 0;
+		margin-left:#0c0a0a;
 		transition: margin-top 0.28s ease;
 	}
 

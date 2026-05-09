@@ -88,12 +88,13 @@ export class EmpBasicDetailsComponent {
           : []
       }
     };
-
+    console.log("shit");
     this.employeeService.registerEmployee(payload).subscribe({
       next: (res: any) => {
         this.notify.showSuccess('Employee registered', res?.message || 'Employee registered successfully.');
 
-        const empId = res.data.employee.id;
+        const empId = res?.data?.employee.id;
+        console.log(`Inside Register Employee ${res}`);
         localStorage.setItem('employeeId', empId);
         localStorage.setItem('isRegistered', 'true');
 

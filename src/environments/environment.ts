@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  authUrl: 'https://issued-produce-wisconsin-sight.trycloudflare.com/authservice',
-  apiUrl: 'https://issued-produce-wisconsin-sight.trycloudflare.com'
+  authUrl: 'http://localhost:3000/authservice',
+  apiUrl: 'http://localhost:3000'
 };
