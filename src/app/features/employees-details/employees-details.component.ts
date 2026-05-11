@@ -152,12 +152,21 @@ export class EmployeesDetailsComponent implements OnInit, AfterViewInit {
         datasets: [
           {
             label: 'Employees per Department',
-            data: data
+            data: data,
+            // barThickness: 100
           }
         ]
       },
       options: {
-        responsive: true
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              stepSize: 1
+            }
+          }
+        }
       }
     });
   }
