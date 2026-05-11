@@ -17,4 +17,8 @@ export class SidebarComponent {
   closeMobileSidebar(): void {
     this.sidebarState.closeMobileSidebar();
   }
+
+  get hrPortalBlocked(): boolean {
+    return localStorage.getItem('hrPortalBlocked') === 'true';
+  }
 }

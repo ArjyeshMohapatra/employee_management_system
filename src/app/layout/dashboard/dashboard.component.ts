@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AttendanceService } from 'src/app/core/services/attendance.service';
+import { LeaveService } from 'src/app/core/services/leave.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,15 +9,39 @@ import { AttendanceService } from 'src/app/core/services/attendance.service';
 })
 export class DashboardComponent implements OnInit, OnDestroy{
   dailyWorkTime = '0';
+  leaveStatus = 'No Info';
   private timerId: ReturnType<typeof setInterval> | null = null;
-  constructor(private attendanceService: AttendanceService) { }
+
+  constructor(
+    private attendanceService: AttendanceService,
+    private leaveService: LeaveService
+  ) { }
 
   ngOnInit(): void {
     this.loadDailyWorkTime();
+    this.loadLeaveStatus();
   }
 
   ngOnDestroy(): void {
     if (this.timerId) clearInterval(this.timerId);
+  }
+
+  loadLeaveStatus(): void{
+    const employeeId = localStorage.getItem('employeeId');
+    if (!employeeId) {
+      this.leaveStatus = 'No Info';
+      return;
+    }
+    this.leaveService.getLeavesByEmpId(employeeId).subscribe({
+      next: (res: any) => {
+        const leaves = res?.data || [];
+        const latestLeave = leaves[0];
+        this.leaveStatus = latestLeave?.status ?? 'No Info';
+      },
+      error: () => {
+        this.leaveStatus = 'No Info';
+      }
+    })
   }
 
   loadDailyWorkTime(): void {

@@ -5,6 +5,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { GuestGuard } from './core/guards/guest.guard';
 import { RegistrationGuard } from './core/guards/registration.guard';
+import { HrPortalGuard } from './core/guards/hr-portal.guard';
 
 const routes: Routes = [
   {
@@ -78,7 +79,7 @@ const routes: Routes = [
     loadChildren: () =>
       import('./features/hr-portal/hr-portal.module')
         .then(m => m.HRPortalModule),
-    canActivate: [AuthGuard, RegistrationGuard]  
+    canActivate: [AuthGuard, RegistrationGuard, HrPortalGuard]  
   },
   {
     path: '**',

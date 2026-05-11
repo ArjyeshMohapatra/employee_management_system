@@ -43,9 +43,18 @@
       <span class="label">Leave Mgmt</span>
     </a>
 
-    <a routerLink="/hr-portal" routerLinkActive="active" class="nav-item" (click)="closeMobileSidebar()">
-      <i class="fa-solid fa-person"></i>
-      <span class="label">HR Portal</span>
-    </a>
+    <ng-container *ngIf="!hrPortalBlocked; else blockedHrPortal">
+      <a routerLink="/hr-portal" routerLinkActive="active" class="nav-item" (click)="closeMobileSidebar()">
+        <i class="fa-solid fa-person"></i>
+        <span class="label">HR Portal</span>
+      </a>
+    </ng-container>
+
+    <ng-template #blockedHrPortal>
+      <span class="nav-item nav-item-disabled" title="You have to be an admin or HR in order to access this page">
+        <i class="fa-solid fa-person"></i>
+        <span class="label">HR Portal</span>
+      </span>
+    </ng-template>
   </nav>
 </aside>
