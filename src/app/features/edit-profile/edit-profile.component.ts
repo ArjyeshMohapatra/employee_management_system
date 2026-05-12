@@ -7,6 +7,8 @@ import { PhoneValidator } from 'src/app/core/validators/phone.validator';
 import { ScriptValidator } from 'src/app/core/validators/script-validator.validator';
 import { AadharValidator } from 'src/app/core/validators/aadhar.validator';
 import { SalaryValidator } from 'src/app/core/validators/salary.validator';
+import { LoadingService } from 'src/app/core/services/loading.service';
+import { finalize } from 'rxjs';
 
 export interface EmployeeProfileForm{
   employee: FormGroup<{
@@ -60,7 +62,8 @@ export class EditProfileComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private empService: EmployeeService,
-    private notify: NotificationService
+    private notify: NotificationService,
+    private loader: LoadingService
   ) {}
  
   ngOnInit(): void {
@@ -122,7 +125,15 @@ export class EditProfileComponent implements OnInit, OnDestroy {
  
   // ---------------- LOAD DATA ----------------
   loadEmployeeData() {
-    this.empService.getEmployeeById(this.employeeId).subscribe({
+    const startTime = Date.now();
+    this.loader.show();
+    this.empService.getEmployeeById(this.employeeId)
+    .pipe(
+      finalize(() => {
+        this.loader.hide(startTime);
+      })
+    )
+      .subscribe({
       next: (res: any) => {
  
         const data = res.data;
@@ -212,10 +223,20 @@ export class EditProfileComponent implements OnInit, OnDestroy {
           : []
       }
     };
- 
-    this.empService.updateEmployee(this.employeeId, payload).subscribe({
+
+    const startTime = Date.now();
+    this.loader.show();
+    this.empService.updateEmployee(this.employeeId, payload)
+    .pipe(
+      finalize(() => {
+        this.loader.hide(startTime);
+      })
+    )
+      .subscribe({
       next: () => {
-        this.notify.showSuccess('Profile updated', 'Your profile changes were applied successfully.');
+          setTimeout(() => {
+            this.notify.showSuccess('Profile updated', 'Your profile changes were applied successfully.');
+        }, 1000);
         this.loadEmployeeData();
       },
       error: (err) => {

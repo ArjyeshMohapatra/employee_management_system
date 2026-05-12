@@ -6,6 +6,7 @@ import { HeaderComponent } from '../header/header.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { RouterModule } from '@angular/router';
 import { CdkTableModule } from "@angular/cdk/table";
+import { MatToolbarModule } from "@angular/material/toolbar";
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { CdkTableModule } from "@angular/cdk/table";
   imports: [
     CommonModule,
     RouterModule,
-    CdkTableModule
+    CdkTableModule,
+    MatToolbarModule
 ],
   exports: [
     PageLayoutComponent

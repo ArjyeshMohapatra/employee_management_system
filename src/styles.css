@@ -1,5 +1,7 @@
 @import './styles/shared.css';
-
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 :root {
   --sidebar-expanded: 260px;
   --sidebar-collapsed: 84px;

@@ -7,7 +7,6 @@ import { EmailValidator } from 'src/app/core/validators/email.validator';
 import { CheckRegistrationService } from 'src/app/core/services/check-registration.service';
 import { SessionService } from 'src/app/core/services/session.service';
 import { NotificationService } from 'src/app/core/services/notification.service';
-import { NotFoundError } from 'rxjs';
 
 interface AuthResponse {
   message?: string;

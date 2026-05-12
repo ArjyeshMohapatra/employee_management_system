@@ -8,6 +8,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { PageLayoutModule } from 'src/app/shared/ui/page-layout/page-layout.module';
 import { ErrorControlComponent } from 'src/app/shared/error-control/error-control.component';
 import { ErrorMsgPipe } from 'src/app/core/pipes/error-msg.pipe';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from "@angular/material/form-field";
 
 @NgModule({
   declarations: [
@@ -20,7 +22,9 @@ import { ErrorMsgPipe } from 'src/app/core/pipes/error-msg.pipe';
     FormsModule,
     ReactiveFormsModule,
     PageLayoutModule,
-    ErrorMsgPipe
-  ]
+    ErrorMsgPipe,
+    MatButtonModule,
+    MatFormFieldModule
+]
 })
 export class EditProfileModule { }

@@ -4,6 +4,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import Chart from 'chart.js/auto';
+import { LoadingService } from 'src/app/core/services/loading.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-employees-details',
@@ -52,7 +54,8 @@ export class EmployeesDetailsComponent implements OnInit, AfterViewInit {
   totalRecords: number = 0;
 
   constructor(
-    private employeeService: EmployeeService
+    private employeeService: EmployeeService,
+    private loader: LoadingService
   ) { }
 
   ngOnInit(): void {
@@ -76,8 +79,15 @@ export class EmployeesDetailsComponent implements OnInit, AfterViewInit {
   }
 
   loadEmployees(offset: number, limit: number): void {
+    const startTime = Date.now();
+    this.loader.show();
     this.employeeService
       .getEmployeeData(this.selectedDepartment, offset, limit)
+      .pipe(
+        finalize(() => {
+          this.loader.hide(startTime);
+        })
+      )
       .subscribe((result: any) => {
 
         const rows = (result.data || []).map((res: any) => ({
@@ -114,7 +124,15 @@ export class EmployeesDetailsComponent implements OnInit, AfterViewInit {
   }
 
   loadChartData(): void {
-    this.employeeService.getAllEmployees().subscribe((result: any) => {
+    const startTime = Date.now();
+    this.loader.show();
+    this.employeeService.getAllEmployees()
+    .pipe(
+      finalize(() => {
+        this.loader.hide(startTime);
+      })
+    )
+      .subscribe((result: any) => {
    
       const employees = result.data || [];
       const deptCount: any = {};

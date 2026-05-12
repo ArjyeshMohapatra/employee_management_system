@@ -5,6 +5,7 @@ import { SignupRoutingModule } from './signup-routing.module';
 import { SignUpComponent } from './signup.component';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from "@angular/material/form-field";
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     SignupRoutingModule,
     FormsModule,
-    ReactiveFormsModule
-  ]
+    ReactiveFormsModule,
+    MatFormFieldModule
+]
 })
 export class SignupModule { }

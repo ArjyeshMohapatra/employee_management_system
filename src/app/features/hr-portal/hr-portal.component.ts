@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { LeaveService } from 'src/app/core/services/leave.service';
- 
+import { finalize } from 'rxjs';
+import { LoadingService } from 'src/app/core/services/loading.service';
+
 interface LeaveRequest {
   id: string;
   employeeName: string;
@@ -43,7 +45,8 @@ export class HRPortalComponent implements OnInit {
  
   constructor(
     private leaveService: LeaveService,
-    private notify: NotificationService
+    private notify: NotificationService,
+    private loader: LoadingService
   ) {}
  
   ngOnInit(): void {
@@ -61,7 +64,14 @@ export class HRPortalComponent implements OnInit {
   }
  
   loadAllLeaves() {
+    const startTime = Date.now();
+    this.loader.show();
     this.leaveService.getLeavesByStatus(this.selectedStatus)
+    .pipe(
+      finalize(() => {
+        this.loader.hide(startTime);
+      })
+    )
       .subscribe({
         next: (res: any) => {
           this.allLeaves = (res.data || []).map(
@@ -79,7 +89,14 @@ export class HRPortalComponent implements OnInit {
   }
  
   approveLeave(leaveId: string) {
+    const startTime = Date.now();
+    this.loader.show();
     this.leaveService.updateLeaveStatus(leaveId, 'APPROVED')
+    .pipe(
+      finalize(() => {
+        this.loader.hide(startTime);
+      })
+    )
       .subscribe({
         next: () => {
           this.notify.showSuccess('Leave approved', 'The leave request was approved.');
@@ -90,7 +107,14 @@ export class HRPortalComponent implements OnInit {
   }
  
   rejectLeave(leaveId: string) {
+    const startTime = Date.now();
+    this.loader.show();
     this.leaveService.updateLeaveStatus(leaveId, 'REJECTED')
+    .pipe(
+      finalize(() => {
+        this.loader.hide(startTime);
+      })
+    )
       .subscribe({
         next: () => {
           this.notify.showSuccess('Leave rejected', 'The leave request was rejected.');

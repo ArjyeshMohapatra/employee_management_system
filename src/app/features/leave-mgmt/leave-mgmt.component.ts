@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { LeaveService } from 'src/app/core/services/leave.service';
 import { NotificationService } from 'src/app/core/services/notification.service';
+import { finalize } from 'rxjs';
+import { LoadingService } from 'src/app/core/services/loading.service';
  
 interface LeaveRequest {
   id: string;
@@ -40,7 +42,8 @@ export class LeaveMgmtComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private leaveService: LeaveService,
-    private notify: NotificationService
+    private notify: NotificationService,
+    private loader: LoadingService
   ) {}
  
   ngOnInit(): void {
@@ -95,8 +98,16 @@ export class LeaveMgmtComponent implements OnInit {
       to_date: this.formatDate(this.leaveForm.value.to_date),
       reason: this.leaveForm.value.reason
     };
- 
-    this.leaveService.applyLeave(empId, payload).subscribe({
+
+    const startTime = Date.now();
+    this.loader.show();
+    this.leaveService.applyLeave(empId, payload)
+    .pipe(
+      finalize(() => {
+        this.loader.hide(startTime);
+      })
+    )
+      .subscribe({
       next: () => {
         this.leaveForm.reset();
         this.notify.showSuccess('Leave applied', 'Your leave request was submitted successfully.');
@@ -116,8 +127,16 @@ export class LeaveMgmtComponent implements OnInit {
   loadLeaves() {
     const empId = this.getEmpId();
     if (!empId) return;
- 
-    this.leaveService.getLeavesByEmpId(empId).subscribe({
+
+    const startTime = Date.now();
+    this.loader.show();
+    this.leaveService.getLeavesByEmpId(empId)
+    .pipe(
+      finalize(() => {
+        this.loader.hide(startTime);
+      })
+    )
+      .subscribe({
       next: (res: any) => {
         this.dataSource.data = (res.data || []).map((item: any, i: number) => ({
           ...item,
@@ -133,8 +152,15 @@ export class LeaveMgmtComponent implements OnInit {
       this.notify.showWarning('Permission denied', 'Only HR or Admin can approve leave requests.');
       return;
     }
- 
+
+    const startTime = Date.now();
+    this.loader.show();
     this.leaveService.updateLeaveStatus(empId, 'APPROVED')
+    .pipe(
+      finalize(() => {
+        this.loader.hide(startTime);
+      })
+    )
       .subscribe({
         next: () => {
           this.notify.showSuccess('Leave approved', 'The leave request was approved.');
@@ -149,8 +175,15 @@ export class LeaveMgmtComponent implements OnInit {
       this.notify.showWarning('Permission denied', 'Only HR or Admin can reject leave requests.');
       return;
     }
- 
+
+    const startTime = Date.now();
+    this.loader.show();
     this.leaveService.updateLeaveStatus(empId, 'REJECTED')
+    .pipe(
+      finalize(() => {
+        this.loader.hide(startTime);
+      })
+    )
       .subscribe({
         next: () => {
           this.notify.showSuccess('Leave rejected', 'The leave request was rejected.');

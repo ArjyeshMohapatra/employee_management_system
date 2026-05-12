@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { AttendanceService } from 'src/app/core/services/attendance.service';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { MatTableDataSource } from '@angular/material/table';
+import { finalize } from 'rxjs';
+import { LoadingService } from 'src/app/core/services/loading.service';
+import { start } from 'repl';
 
 @Component({
   selector: 'app-attendance-mgmt',
@@ -41,7 +44,8 @@ export class AttendanceMgmtComponent implements OnInit{
 
   constructor(
     private attendanceService: AttendanceService,
-    private notify: NotificationService
+    private notify: NotificationService,
+    private loader: LoadingService
   ) { }
   
   ngOnInit(): void {
@@ -61,7 +65,15 @@ export class AttendanceMgmtComponent implements OnInit{
     const employeeId = localStorage.getItem('employeeId');
   
     if (!employeeId) return;
+
+    const startTime = Date.now();
+    this.loader.show();
     this.attendanceService.checkIn(employeeId)
+    .pipe(
+      finalize(() => {
+        this.loader.hide(startTime);
+      })
+    )
       .subscribe({
         next: (res) => {
           if (res?.status === 'fail') {
@@ -85,7 +97,15 @@ export class AttendanceMgmtComponent implements OnInit{
       this.notify.showWarning('Warning', 'Please check in first');
       return;
     }
+
+    const startTime = Date.now();
+    this.loader.show()
     this.attendanceService.checkOut(employeeId)
+    .pipe(
+      finalize(() => {
+        this.loader.hide(startTime);
+      })
+    )
   .subscribe({
     next: (res) => {
       if (res.status === 'fail') {
@@ -166,8 +186,15 @@ export class AttendanceMgmtComponent implements OnInit{
     const employeeId = localStorage.getItem('employeeId');
   
     if (!employeeId) return;
-  
+
+    const startTime = Date.now();
+    this.loader.show();
     this.attendanceService.getAttendance(employeeId, limit, offset)
+    .pipe(
+      finalize(() => {
+        this.loader.hide(startTime);
+      })
+    )
       .subscribe(res => {
 
         this.totalRecords = res.data.length;

@@ -12,12 +12,14 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NotificationComponent } from './shared/notification/notification.component';
+import { LoadingComponent } from './shared/loading/loading.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     NotificationComponent,
+    LoadingComponent,
   ],
   imports: [
     BrowserModule,
