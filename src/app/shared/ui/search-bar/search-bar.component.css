@@ -1,18 +1,25 @@
-.search-pill{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    padding:10px 16px;
-    border-radius:999px;
-    border:1px solid #ddd;
-    background:white;
-    width:320px;
-    margin-bottom: 15px;
+.search-pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    border: 1px solid #ddd;
+    background: white;
+    width: 100%;
+    box-sizing: border-box;
   }
   
-  .search-pill input{
-    border:none;
-    outline:none;
-    width:100%;
-    background:transparent;
+  .search-pill input {
+    border: none;
+    outline: none;
+    width: 100%;
+    background: transparent;
+    min-width: 0;
+  }
+
+  :host {
+    display: block;
+    width: 100%;
+    min-width: 0;
   }

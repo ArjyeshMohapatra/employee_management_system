@@ -29,9 +29,10 @@
   width: 40px;
   height: 40px;
   border: 0;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.09);
+  border-radius: 20px;
+  background: rgba(129, 168, 222, 0.2);
   color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   display: grid;
   place-items: center;
   cursor: pointer;
@@ -49,6 +50,7 @@
   font-weight: 800;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+  color: white;
   white-space: nowrap;
   overflow: hidden;
 }
@@ -66,7 +68,7 @@
   min-height: 46px;
   padding: 0 14px;
   border-radius: 12px;
-  color: #cbd5e1;
+  color: #ffffff;
   text-decoration: none;
   transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.25s;
 }
@@ -123,6 +125,7 @@
 .label {
   white-space: nowrap;
   overflow: hidden;
+  color: white;
   text-overflow: ellipsis;
   transition:
     opacity 0.5s ease

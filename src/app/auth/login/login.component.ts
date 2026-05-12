@@ -7,6 +7,7 @@ import { EmailValidator } from 'src/app/core/validators/email.validator';
 import { CheckRegistrationService } from 'src/app/core/services/check-registration.service';
 import { SessionService } from 'src/app/core/services/session.service';
 import { NotificationService } from 'src/app/core/services/notification.service';
+import { switchMap } from 'rxjs/operators';
 
 interface AuthResponse {
   message?: string;
@@ -40,62 +41,64 @@ export class LoginComponent {
   }
 
   onLogin(): void {
+
     if (this.loginForm.invalid || this.isSubmitting) {
+  
       this.loginForm.markAllAsTouched();
-      this.notify.showWarning('Warning', 'Please complete the form correctly.');
+  
+      this.notify.showWarning(
+        'Warning',
+        'Please complete the form correctly.'
+      );
+  
       return;
     }
-
+  
     const { email, password } = this.loginForm.value;
+  
     this.isSubmitting = true;
-
+  
     this.auth.login(email, password)
       .pipe(
+        switchMap((res: AuthResponse) => {
+  
+          if (res?.message !== 'success') throw res;
+  
+          const token = res?.token?.token;
+          if (!token) {
+            throw {
+              message: 'Token missing from response.'
+            };
+          }
+          this.session.startSession(token);
+          return this.crs.checkRegistrationStatus();
+        }),
+  
         finalize(() => {
           this.isSubmitting = false;
         })
       )
       .subscribe({
-        next: (res: AuthResponse) => {
-          if (res?.message === 'success') {
-            const token = res?.token?.token;
-            
-            if (token) {
-              this.session.startSession(token);
-
-              this.crs.checkRegistrationStatus().subscribe({
-                next: (statusRes: any) => {
-                  const isRegistered = !!statusRes.data.isRegistered;
-                  const employeeId = statusRes.data.id;
-
-                  localStorage.setItem('isRegistered', String(isRegistered));
-                  localStorage.setItem('employeeId', employeeId);
-
-                  if (isRegistered) {
-                    this.router.navigate(['/dashboard']);
-                  } else {
-                    this.router.navigate(['/emp-basic-regis']);
-                  }
-                },
-
-                error: (err) => {
-                  this.notify.showError(err);
-                }
-              });
-
-              return;
-            }
-
-            this.notify.showMessage('Warning', 'Token missing from response.');
+  
+        next: (statusRes: any) => {
+  
+          const isRegistered = !!statusRes.data.isRegistered;
+          const employeeId = statusRes.data.id;
+  
+          localStorage.setItem('isRegistered', String(isRegistered));
+          localStorage.setItem('employeeId', employeeId);
+  
+          if (isRegistered) this.router.navigate(['/dashboard']);
+          else this.router.navigate(['/emp-basic-regis']);
+        },
+        error: (err) => {
+          if (err?.message === 'Token missing from response.') {
+            this.notify.showMessage('Warning', err.message);
             return;
           }
-
-          this.notify.showError(res);
-        },
-
-        error: (err) => {
           this.notify.showError(err);
         }
       });
+  
   }
 }

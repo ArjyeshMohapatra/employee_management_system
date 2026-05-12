@@ -24,6 +24,10 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  background: rgba(102, 180, 248, 0.2);
+  padding: 10px;
+  border-radius: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.2)
 }
 
 .header-profile {

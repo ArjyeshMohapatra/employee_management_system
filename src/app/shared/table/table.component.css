@@ -24,11 +24,12 @@
 }
 
 .resizable-table {
-  table-layout: fixed;
+  table-layout: auto;
 }
 
 :host ::ng-deep table {
-  width: 100%;
+  width: max-content;
+  min-width: 100%;
   background: #ffffff;
   border-collapse: separate;
   border-spacing: 0;
@@ -57,6 +58,7 @@
   padding: 12px 16px;
   vertical-align: middle;
   border-bottom: 1px solid #eef2f7;
+  white-space: nowrap;
   border-right: 1px solid #f1f5f9;
 }
 
@@ -104,7 +106,7 @@ mat-paginator {
   :host ::ng-deep td.mat-mdc-cell {
     font-size: 12px;
     padding: 10px 8px;
-    white-space: normal;
+    /* white-space: normal; */
     word-break: break-word;
   }
 

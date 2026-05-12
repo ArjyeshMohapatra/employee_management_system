@@ -2,15 +2,30 @@
   <div class="card p-3">
     <h5 class="mb-3">All Leave Requests</h5>
 
-    <div class="d-flex g-3">
-      <app-search-bar 
-	  placeholder="Search leaves..." 
-    (search)="filterLeaves($event)"
-	  ></app-search-bar>
+    <div class="row g-3 align-items-stretch mb-3">
+      <div class="col-12 col-lg-8">
+        <app-search-bar
+          class="w-100"
+          placeholder="Search leaves..."
+          (search)="filterLeaves($event)">
+        </app-search-bar>
+      </div>
 
-    <select #leaveStatus class="form-select" (change)="filterByStatus(leaveStatus.value)">
-      <option *ngFor="let status of statuses" [value]="status">{{status}}</option>
-    </select>
+      <div class="col-12 col-lg-4 mb-3">
+        <select
+          #leaveStatus
+          class="form-select status-select w-100"
+          aria-label="Filter leave requests by status"
+          (change)="filterByStatus(leaveStatus.value)"
+        >
+          <option
+            *ngFor="let status of statuses"
+            [value]="status"
+          >
+            {{ status }}
+          </option>
+        </select>
+      </div>
     </div>
 
     <div class="table-responsive border rounded">
