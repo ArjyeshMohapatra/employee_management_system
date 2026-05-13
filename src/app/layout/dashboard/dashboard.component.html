@@ -1,5 +1,5 @@
-<app-page-layout [title]="'Dashboard'">
-  <div class="row g-3">
+<app-page-layout [title]="'Dashboard'" *ngIf="isContentReady">
+  <div class="row g-3 animate-in">
 
     <div class="col-lg-6 col-md-6 col-12">
       <div class="stat-row border-navy">

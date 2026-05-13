@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AttendanceService } from 'src/app/core/services/attendance.service';
 import { LeaveService } from 'src/app/core/services/leave.service';
 import { CheckRegistrationService } from 'src/app/core/services/check-registration.service';
+import { LoadingService } from 'src/app/core/services/loading.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,19 +13,30 @@ export class DashboardComponent implements OnInit, OnDestroy{
   dailyWorkTime = '0';
   leaveStatus = 'No Info';
   private timerId: ReturnType<typeof setInterval> | null = null;
+  isContentReady = false;
 
   constructor(
     private attendanceService: AttendanceService,
     private leaveService: LeaveService,
-    private crs: CheckRegistrationService
+    private crs: CheckRegistrationService,
+    private loader: LoadingService
   ) { }
 
   ngOnInit(): void {
+    const startTime = Date.now();
     // Wait for the service to provide a valid ID
     this.crs.employeeId$.subscribe(id => {
       if (id) {
+        this.loader.show();
+        this.isContentReady = false;
+        
         this.loadDailyWorkTime();
         this.loadLeaveStatus();
+
+        setTimeout(() => {
+          this.loader.hide(startTime);
+          this.isContentReady = true;
+        }, 1200);
       }
     });
   }

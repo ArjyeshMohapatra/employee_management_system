@@ -9,7 +9,10 @@ import { HttpClient } from '@angular/common/http';
 export class CheckRegistrationService {
 
   constructor(private http: HttpClient) { }
+
+  // creates a cache variable which holds current value and future updated values & auto notifies subscribers
   private registrationStatus$ = new BehaviorSubject<boolean | null>(null);
+  
   private employeeIdSubject = new BehaviorSubject<string | null>(localStorage.getItem('employeeId'));
   public employeeId$ = this.employeeIdSubject.asObservable();
   private checkRegistrationUrl = `${environment.apiUrl}/employeeservice/isRegistered`; 
