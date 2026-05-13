@@ -80,22 +80,15 @@ export class LoginComponent {
       )
       .subscribe({
   
-        next: (statusRes: any) => {
+        next: (isRegistered: boolean) => {
   
-          const isRegistered = !!statusRes.data.isRegistered;
-          const employeeId = statusRes.data.id;
-  
-          localStorage.setItem('isRegistered', String(isRegistered));
-          localStorage.setItem('employeeId', employeeId);
-  
-          if (isRegistered) this.router.navigate(['/dashboard']);
-          else this.router.navigate(['/emp-basic-regis']);
+          if (isRegistered) {
+            this.router.navigate(['/dashboard']);
+          } else {
+            this.router.navigate(['/emp-basic-regis']);
+          }
         },
         error: (err) => {
-          if (err?.message === 'Token missing from response.') {
-            this.notify.showMessage('Warning', err.message);
-            return;
-          }
           this.notify.showError(err);
         }
       });

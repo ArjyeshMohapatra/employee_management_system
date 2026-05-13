@@ -5,7 +5,9 @@ import { LeaveService } from 'src/app/core/services/leave.service';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { finalize } from 'rxjs';
 import { LoadingService } from 'src/app/core/services/loading.service';
- 
+import { CheckRegistrationService } from 'src/app/core/services/check-registration.service';
+
+
 interface LeaveRequest {
   id: string;
   emp_id: string;
@@ -43,7 +45,8 @@ export class LeaveMgmtComponent implements OnInit {
     private fb: FormBuilder,
     private leaveService: LeaveService,
     private notify: NotificationService,
-    private loader: LoadingService
+    private loader: LoadingService,
+    private crs: CheckRegistrationService
   ) {}
  
   ngOnInit(): void {
@@ -56,7 +59,11 @@ export class LeaveMgmtComponent implements OnInit {
     this.isHrOrAdmin =
       normalizedRole === 'HR' || normalizedRole === 'ADMIN';
  
-    this.loadLeaves();
+      this.crs.employeeId$.subscribe(id => {
+        if (id) {
+          this.loadLeaves();
+        }
+      });
 
     this.dataSource.filterPredicate = (row: LeaveRequest, filter: string) => {
       return (

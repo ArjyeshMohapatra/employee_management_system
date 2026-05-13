@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
+import { CheckRegistrationService } from './check-registration.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,10 @@ import { jwtDecode } from 'jwt-decode';
 export class SessionService {
   private timer: any = null;
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private crs: CheckRegistrationService
+  ) { }
   
   startSession(token: string): void{
     localStorage.setItem('authToken', token);
@@ -44,6 +48,7 @@ export class SessionService {
 
   clearSession(): void {
     localStorage.clear();
+    this.crs.clearCache();
     document.cookie.split(';').forEach(cookie => {
       document.cookie =
         cookie.split('=')[0].trim() +

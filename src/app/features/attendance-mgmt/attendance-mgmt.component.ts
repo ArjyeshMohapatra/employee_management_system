@@ -4,7 +4,7 @@ import { NotificationService } from 'src/app/core/services/notification.service'
 import { MatTableDataSource } from '@angular/material/table';
 import { finalize } from 'rxjs';
 import { LoadingService } from 'src/app/core/services/loading.service';
-import { start } from 'repl';
+import { CheckRegistrationService } from 'src/app/core/services/check-registration.service';
 
 @Component({
   selector: 'app-attendance-mgmt',
@@ -45,11 +45,16 @@ export class AttendanceMgmtComponent implements OnInit{
   constructor(
     private attendanceService: AttendanceService,
     private notify: NotificationService,
-    private loader: LoadingService
+    private loader: LoadingService,
+    private crs: CheckRegistrationService
   ) { }
   
   ngOnInit(): void {
-    this.loadAttendance(0, 5);
+    this.crs.employeeId$.subscribe(id => {
+      if (id) {
+        this.loadAttendance(0, 5);
+      }
+    });
     this.dataSource.filterPredicate = (row: any, filter: string) => {
       return (
         row.date?.toLowerCase().includes(filter) ||

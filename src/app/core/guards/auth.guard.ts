@@ -26,19 +26,6 @@ export class AuthGuard implements CanActivate {
       this.session.clearSession();
       return this.router.parseUrl('/login');
     }
-    
-    const isRegistered = localStorage.getItem('isRegistered') === 'true';
-    
-    if (!isRegistered) {
-      if (state.url === '/emp-basic-regis') {
-        return true; 
-      }
-      return this.router.parseUrl('/emp-basic-regis');
-    }
-    
-    if (isRegistered && state.url.includes('/emp-basic-regis')) {
-       return this.router.parseUrl('/dashboard');
-    }
 
     return true;
   }

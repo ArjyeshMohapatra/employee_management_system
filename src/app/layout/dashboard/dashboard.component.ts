@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AttendanceService } from 'src/app/core/services/attendance.service';
 import { LeaveService } from 'src/app/core/services/leave.service';
+import { CheckRegistrationService } from 'src/app/core/services/check-registration.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,12 +15,18 @@ export class DashboardComponent implements OnInit, OnDestroy{
 
   constructor(
     private attendanceService: AttendanceService,
-    private leaveService: LeaveService
+    private leaveService: LeaveService,
+    private crs: CheckRegistrationService
   ) { }
 
   ngOnInit(): void {
-    this.loadDailyWorkTime();
-    this.loadLeaveStatus();
+    // Wait for the service to provide a valid ID
+    this.crs.employeeId$.subscribe(id => {
+      if (id) {
+        this.loadDailyWorkTime();
+        this.loadLeaveStatus();
+      }
+    });
   }
 
   ngOnDestroy(): void {

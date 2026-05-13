@@ -6,6 +6,7 @@ import { NotificationService } from 'src/app/core/services/notification.service'
 import { AadharValidator } from 'src/app/core/validators/aadhar.validator';
 import { PhoneValidator } from 'src/app/core/validators/phone.validator';
 import { SalaryValidator } from 'src/app/core/validators/salary.validator';
+import { CheckRegistrationService } from 'src/app/core/services/check-registration.service';
 
 @Component({
   selector: 'app-emp-basic-details',
@@ -20,7 +21,8 @@ export class EmpBasicDetailsComponent {
     private fb: FormBuilder,
     private router: Router,
     private employeeService: EmployeeService,
-    private notify: NotificationService
+    private notify: NotificationService,
+    private crs : CheckRegistrationService
   ) {
 
     this.empForm = this.fb.group({
@@ -88,7 +90,6 @@ export class EmpBasicDetailsComponent {
           : []
       }
     };
-    console.log("shit");
     this.employeeService.registerEmployee(payload).subscribe({
       next: (res: any) => {
         this.notify.showSuccess('Employee registered', res?.message || 'Employee registered successfully.');
@@ -96,7 +97,9 @@ export class EmpBasicDetailsComponent {
         const empId = res?.data?.employee.id;
         console.log(`Inside Register Employee ${res}`);
         localStorage.setItem('employeeId', empId);
-        localStorage.setItem('isRegistered', 'true');
+
+        // 1. Update the service cache so guards permit entry to dashboard
+        this.crs.setRegistered();
 
         setTimeout(() => {
           this.router.navigate(['/dashboard']);

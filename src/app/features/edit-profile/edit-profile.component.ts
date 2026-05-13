@@ -9,6 +9,7 @@ import { AadharValidator } from 'src/app/core/validators/aadhar.validator';
 import { SalaryValidator } from 'src/app/core/validators/salary.validator';
 import { LoadingService } from 'src/app/core/services/loading.service';
 import { finalize } from 'rxjs';
+import { CheckRegistrationService } from 'src/app/core/services/check-registration.service';
 
 export interface EmployeeProfileForm{
   employee: FormGroup<{
@@ -63,22 +64,24 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private empService: EmployeeService,
     private notify: NotificationService,
-    private loader: LoadingService
+    private loader: LoadingService,
+    private crs: CheckRegistrationService
   ) {}
  
   ngOnInit(): void {
     this.initForm();
- 
-    this.employeeId = localStorage.getItem('employeeId') || '';
- 
-    if (!this.employeeId) {
-      this.notify.showWarning('Employee ID missing', 'Employee ID was not found for this profile.');
-      return;
-    }
- 
-    this.loadEmployeeData();
+    
+    // Use the reactive stream instead of manual localStorage check
+    this.crs.employeeId$.subscribe(id => {
+      if (id) {
+        this.employeeId = id;
+        this.loadEmployeeData();
+      } else {
+        this.notify.showWarning('Employee ID missing', 'Waiting for user profile...');
+      }
+    });
   }
-
+  
   ngOnDestroy(): void {
     this.formChanges?.unsubscribe();
   }
