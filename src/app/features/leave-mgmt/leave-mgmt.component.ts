@@ -198,5 +198,6 @@ export class LeaveMgmtComponent implements OnInit {
 
   filterLeaves(value: string): void {
     this.dataSource.filter = value.trim().toLowerCase();
+    this.totalRecords = this.dataSource.filteredData.length;
   }
 }

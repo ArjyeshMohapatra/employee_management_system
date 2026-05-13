@@ -2,7 +2,6 @@ import { AfterViewInit, ViewChild, Component, OnInit } from '@angular/core';
 import { EmployeeService } from 'src/app/core/services/employee.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
 import Chart from 'chart.js/auto';
 import { LoadingService } from 'src/app/core/services/loading.service';
 import { finalize } from 'rxjs';
@@ -39,7 +38,6 @@ export class EmployeesDetailsComponent implements OnInit, AfterViewInit {
   ];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
 
   dataSource = new MatTableDataSource<any>([]);
   departments: string[] = [
@@ -67,15 +65,14 @@ export class EmployeesDetailsComponent implements OnInit, AfterViewInit {
         row.name?.toLowerCase().includes(filter) ||
         row.email?.toLowerCase().includes(filter) ||
         row.designation?.toLowerCase().includes(filter) ||
-        row.male?.toLowerCase().includes(filter) ||
-        row.employee_type?.toLowerCase().includes(filter)
+        row.gender?.toLowerCase().includes(filter) ||
+        row.emp_type?.toLowerCase().includes(filter)
       );
     }
   }
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
   }
 
   loadEmployees(offset: number, limit: number): void {
@@ -88,31 +85,33 @@ export class EmployeesDetailsComponent implements OnInit, AfterViewInit {
           this.loader.hide(startTime);
         })
       )
-      .subscribe((result: any) => {
+      .subscribe({
+        next: (result: any) => {
+          const rows = (result.data || []).map((res: any, index: number) => ({
+            slNo: offset + index + 1,
+            name: `${res?.first_name ?? ''} ${res?.last_name ?? ''}`.trim(),
+            designation: res?.jobDetails?.designation ?? '',
+            emp_type: res?.jobDetails?.employee_type ?? '',
+            gender: res?.gender ?? '',
+            joining_date: this.formatDate(res?.jobDetails?.joining_date) ?? '',
+            department: res?.jobDetails?.department ?? '',
+            phone: res?.phone ?? '',
+            email: res?.additionalInfo?.email ?? ''
+          }));
 
-        const rows = (result.data || []).map((res: any) => ({
-          name: `${res?.first_name ?? ''} ${res?.last_name ?? ''}`.trim(),
-          designation: res?.jobDetails?.designation ?? '',
-          emp_type: res?.jobDetails?.employee_type ?? '',
-          gender: res?.gender ?? '',
-          joining_date: this.formatDate(res?.jobDetails?.joining_date) ?? '',
-          department: res?.jobDetails?.department ?? '',
-          phone: res?.phone ?? '',
-          email: res?.additionalInfo?.email ?? ''
-        }));
-
-        this.dataSource.data = rows;
-        this.totalRecords = rows.length;
+          this.dataSource.data = rows;
+          this.totalRecords = this.dataSource.filteredData.length;
+        },
+        error: (err) => {
+          // If the API throws no data/404, we MUST explicitly wipe the table
+          this.dataSource.data = [];
+          this.totalRecords = 0;
+        }
       });
   }
 
   filterByDepartment(dept: string): void {
     this.selectedDepartment = dept;
-
-    if (this.paginator) {
-      this.paginator.firstPage();
-    }
-
     this.loadEmployees(0, 5);
   }
 
@@ -191,19 +190,16 @@ export class EmployeesDetailsComponent implements OnInit, AfterViewInit {
 
   filterEmployees(value: string): void {
     this.dataSource.filter = value.trim().toLowerCase();
+    this.totalRecords = this.dataSource.filteredData.length;
   }
 
   formatDate(date: string): string {
     if (!date) return '';
   
     const d = new Date(date);
-
     const day = d.toLocaleDateString('en-US', {weekday: 'long'});
-  
     const dd = String(d.getDate()).padStart(2, '0');
-  
     const mm = String(d.getMonth() + 1).padStart(2, '0');
-  
     const yyyy = d.getFullYear();
   
     return `${dd}-${mm}-${yyyy} [${day}]`;

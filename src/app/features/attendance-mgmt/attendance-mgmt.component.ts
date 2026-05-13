@@ -324,6 +324,7 @@ export class AttendanceMgmtComponent implements OnInit{
     }
   
     this.dataSource.data = rows;
+    this.totalRecords = rows.length;
   
     this.totalPresent =
       rows.filter(row => row.status === 'Present').length;
