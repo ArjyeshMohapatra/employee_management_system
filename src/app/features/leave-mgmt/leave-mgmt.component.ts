@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { LeaveService } from 'src/app/core/services/leave.service';
@@ -6,6 +6,7 @@ import { NotificationService } from 'src/app/core/services/notification.service'
 import { finalize } from 'rxjs';
 import { LoadingService } from 'src/app/core/services/loading.service';
 import { CheckRegistrationService } from 'src/app/core/services/check-registration.service';
+import { MatPaginator } from '@angular/material/paginator';
 
 
 interface LeaveRequest {
@@ -23,7 +24,7 @@ interface LeaveRequest {
   templateUrl: './leave-mgmt.component.html',
   styleUrls: ['./leave-mgmt.component.css']
 })
-export class LeaveMgmtComponent implements OnInit {
+export class LeaveMgmtComponent implements OnInit, AfterViewInit {
 
   totalRecords: number = 0;
   leaveForm!: FormGroup;
@@ -73,6 +74,11 @@ export class LeaveMgmtComponent implements OnInit {
         row.status.toLowerCase().includes(filter)
       );
     };
+  }
+
+  @ViewChild(MatPaginator) paginator !: MatPaginator;
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
   }
  
   initForm() {
@@ -149,6 +155,7 @@ export class LeaveMgmtComponent implements OnInit {
           ...item,
           slNo: i + 1
         }));
+          this.totalRecords = this.dataSource.data.length;
       },
       error: (err) => this.notify.showError(err)
     });
