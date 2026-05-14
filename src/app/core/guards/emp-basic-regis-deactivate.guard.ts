@@ -8,33 +8,37 @@ import {
 } from '@angular/router';
 
 import { EmpBasicDetailsComponent } from 'src/app/layout/emp-basic-details/emp-basic-details.component';
+import { CheckRegistrationService } from '../services/check-registration.service';
+import { take, map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmpBasicRegisDeactivateGuard
-implements CanDeactivate<EmpBasicDetailsComponent> {
+  implements CanDeactivate<EmpBasicDetailsComponent> {
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private crs: CheckRegistrationService
+  ) { }
 
   canDeactivate(
     component: EmpBasicDetailsComponent,
     currentRoute: ActivatedRouteSnapshot,
     currentState: RouterStateSnapshot,
     nextState?: RouterStateSnapshot
-  ): boolean | UrlTree {
+  ): Observable<boolean | UrlTree> | boolean {
 
-    const isRegistered =
-      localStorage.getItem('isRegistered') === 'true';
-
-    if (!isRegistered) {
-      return false;
-    }
-
-    if (!nextState || nextState.url === '/dashboard') {
-      return true;
-    }
-
-    return this.router.parseUrl('/dashboard');
+    return this.crs.checkRegistrationStatus().pipe(
+      take(1),
+      map(isRegistered => {
+        if (isRegistered) {
+          return true; // Allow leaving if successfully registered
+        }
+        
+        // If not registered, they must stay unless they are logout-ing
+        return false;
+      })
+    );
   }
 }
