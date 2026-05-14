@@ -13,7 +13,6 @@ export class DashboardComponent implements OnInit, OnDestroy{
   dailyWorkTime = '0';
   leaveStatus = 'No Info';
   private timerId: ReturnType<typeof setInterval> | null = null;
-  isContentReady = false;
 
   constructor(
     private attendanceService: AttendanceService,
@@ -28,15 +27,13 @@ export class DashboardComponent implements OnInit, OnDestroy{
     this.crs.employeeId$.subscribe(id => {
       if (id) {
         this.loader.show();
-        this.isContentReady = false;
         
         this.loadDailyWorkTime();
         this.loadLeaveStatus();
 
         setTimeout(() => {
           this.loader.hide(startTime);
-          this.isContentReady = true;
-        }, 1200);
+        }, 1000);
       }
     });
   }
