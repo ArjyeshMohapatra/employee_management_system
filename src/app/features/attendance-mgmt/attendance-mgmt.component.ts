@@ -130,9 +130,12 @@ export class AttendanceMgmtComponent implements OnInit{
     const inDate = new Date(inTime);
     const outDate = new Date(outTime);
   
-    const minutes =
-      (outDate.getTime() - inDate.getTime()) / 60000;
-  
+    const minutes = (outDate.getTime() - inDate.getTime()) / 60000;
+
+    if (minutes > 540) {
+      return `9.00 hrs`;
+    }
+
     if (minutes < 60) {
       return `${Math.floor(minutes)} mins`;
     }
@@ -214,7 +217,10 @@ export class AttendanceMgmtComponent implements OnInit{
   
               lastOut: item.out_time ? this.formatTime(item.out_time) : '',
   
-              actualWorkTime: item.in_time && item.out_time ? this.calculateWorkTime(item.in_time, item.out_time) : '',
+          actualWorkTime: item.in_time && item.out_time ?
+            this.calculateWorkTime(item.in_time, item.out_time) :
+            (item.in_time && new Date(item.in_time).toDateString() !== new Date().toDateString() ?
+              '9.00 hrs' : ''),
   
               status: item.status === 1 ? 'Present' : item.status === 2 ? 'Leave' : item.status === 3 ? 'WFH' : 'Absent'
             })

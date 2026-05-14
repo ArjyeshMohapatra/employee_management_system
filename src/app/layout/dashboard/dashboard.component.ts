@@ -3,6 +3,7 @@ import { AttendanceService } from 'src/app/core/services/attendance.service';
 import { LeaveService } from 'src/app/core/services/leave.service';
 import { CheckRegistrationService } from 'src/app/core/services/check-registration.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
+import { clear } from 'console';
 
 @Component({
   selector: 'app-dashboard',
@@ -93,12 +94,39 @@ export class DashboardComponent implements OnInit, OnDestroy{
   }
 
   private formatDailyDuration(start: string, end?: string): string {
-    const startMs = new Date(start).getTime();
+    const startDate = new Date(start);
+    const startMs = startDate.getTime();
     const endMs = end ? new Date(end).getTime() : Date.now();
+
+    // check if its a new day (reset to 0 after 12 AM if no check-in exist for today)
+    const today = new Date();
+    if (startDate.toDateString() !== today.toDateString() && !end) {
+      if (this.timerId) clearInterval(this.timerId);
+      return '0';
+    }
 
     if (isNaN(startMs) || isNaN(endMs)) return '0';
 
+    // calculate duration
     const totalSeconds = Math.max(0, Math.floor((endMs - startMs) / 1000));
+    const totalHours = totalSeconds / 3600;
+
+    // auto limit to 9 hrs i.e. auto checkout
+    if (totalHours >= 9 && !end) {
+      if (this.timerId) {
+        clearInterval(this.timerId);
+        this.timerId = null;
+      }
+
+      const empId = localStorage.getItem('employeeId');
+      if (empId) {
+        this.attendanceService.checkOut(empId).subscribe(() => {
+          this.loadDailyWorkTime(); // Refresh UI with actual database values
+        });
+      }
+      
+      return '9 hrs 0 mins (Auto-Ended)';
+    }
 
     if (totalSeconds < 60) {
       return `${totalSeconds} sec`;

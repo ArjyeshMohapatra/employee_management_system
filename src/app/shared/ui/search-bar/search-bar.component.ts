@@ -1,6 +1,6 @@
 import { Input, Output, Component, EventEmitter, OnDestroy } from '@angular/core';
 import { Subscription, Subject } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-search-bar',
@@ -21,7 +21,13 @@ export class SearchBarComponent implements OnDestroy {
 
   constructor() {
     this.subscription = this.searchText
-      .pipe(debounceTime(this.debounceDelay))
+      .pipe(
+        // waits for user to stop typing for debounceDelay seconds
+        debounceTime(this.debounceDelay),
+
+        // only search if value actually changed
+        distinctUntilChanged()
+      )
       .subscribe(value => {
         this.search.emit(value);
       });
