@@ -50,8 +50,6 @@ export class HRPortalComponent implements OnInit {
   ) {}
  
   ngOnInit(): void {
-    this.loadAllLeaves();
-
     this.dataSource.filterPredicate = (row: LeaveRequest, filter: string) => {
       return (
         row.employeeName.toLowerCase().includes(filter) ||
@@ -61,6 +59,17 @@ export class HRPortalComponent implements OnInit {
         row.status.toLowerCase().includes(filter)
       );
     };
+
+    this.leaveService.leaves$.subscribe(leaves => {
+      // Transform and update your existing dataSource
+      this.dataSource.data = leaves.map((item, index) => ({
+        ...item,
+        slNo: index + 1
+      }));
+      this.totalRecords = leaves.length;
+    });
+    
+    this.loadAllLeaves();
   }
  
   loadAllLeaves() {
@@ -101,6 +110,7 @@ export class HRPortalComponent implements OnInit {
         next: () => {
           this.notify.showSuccess('Leave approved', 'The leave request was approved.');
           this.loadAllLeaves();
+          this.leaveService.refreshState();
         },
         error: (err) => this.notify.showError(err)
       });
@@ -119,6 +129,7 @@ export class HRPortalComponent implements OnInit {
         next: () => {
           this.notify.showSuccess('Leave rejected', 'The leave request was rejected.');
           this.loadAllLeaves();
+          this.leaveService.refreshState(); 
         },
         error: (err) => this.notify.showError(err)
       });
