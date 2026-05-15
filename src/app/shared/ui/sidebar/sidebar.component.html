@@ -45,7 +45,13 @@
 
     <ng-container *ngIf="!hrPortalBlocked; else blockedHrPortal">
       <a routerLink="/hr-portal" routerLinkActive="active" class="nav-item" (click)="closeMobileSidebar()">
-        <i class="fa-solid fa-person"></i>
+        <div class="icon-wrapper relative">
+          <i class="fa-solid fa-person"></i>
+          <!-- Badge for Pending Count -->
+          <span *ngIf="pendingCount > 0" class="badge-dot">
+            {{ pendingCount }}
+          </span>
+        </div>
         <span class="label">HR Portal</span>
       </a>
     </ng-container>

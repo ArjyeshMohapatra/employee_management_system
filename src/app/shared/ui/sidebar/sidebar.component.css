@@ -137,6 +137,37 @@
   pointer-events: none;
 }
 
+.icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.badge-dot {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #ef4444; /* Pro Red */
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  height: 18px;
+  width: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 2px solid var(--app-surface, #fff);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Adjust position when sidebar is collapsed to keep it visible */
+.sidebar-collapsed .badge-dot {
+  top: -5px;
+  right: -5px;
+}
+
 @media (max-width: 900px) {
   .sidebar {
     --mobile-sidebar-height: 232px;
