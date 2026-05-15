@@ -54,5 +54,5 @@ export class LeaveService {
       if (!empId) this.pendingCountSubject.next(data.length);
     });
   }
- 
+  
 }
